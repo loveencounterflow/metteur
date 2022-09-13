@@ -1,0 +1,6 @@
+{
+	"dependencies": {
+		"guy": "^11.8.0",
+		"intertype": "^10.1.0"
+	}
+}
