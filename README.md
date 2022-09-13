@@ -1,8 +1,14 @@
+
+
+# Metteur
+
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Metteur](#metteur)
+  - [Terminology](#terminology)
   - [16-page Booklet](#16-page-booklet)
   - [Discussion of Alternative Solutions](#discussion-of-alternative-solutions)
 
@@ -10,19 +16,35 @@
 
 
 
-
-
 # Metteur
 
+## Terminology
+
+<dl>
+
+  <dt>Sheet</dt><dd>the piece of paper to be printed on (in DTP A4 or US Letter most of the time).</dd>
+
+  <dt>Verso</dt><dd>the front side of the Sheet.</dd>
+
+  <dt>Recto</dt><dd>the back side of the Sheet.</dd>
+
+  <dt>Leaf</dt><dd>strictly, each pair of odd and even Pages of the bound book; however, often 'pages' is
+  used to refer to a single side of a Leaf or both sides of a Leaf indiscriminately.</dd>
+
+  <dt>Page</dt><dd>strictly, the odd or even side of a Leaf, but often used to mean Leaf sensu stricto.</dd>
+
+  </dl>
 
 ## 16-page Booklet
 
 
 * each A4 page scaled to 220mm ✕ 307mm
-* each inserted A7 page scaled to 76.75mm ✕ 110mm
+<!-- * each inserted A7 page scaled to 76.75mm ✕ 110mm -->
+* scale to 104% when sending to printer
 * this is to accommodate for behavior of Brother laser printer: it has a margin of 5mm on all edges and will 
   scale down an A4 PDF to an area of 200mm ✕ 269mm instead of leaving it at 210mm ✕ 279mm (A4). 
   To compensate, we scale all pages b a factor of `210/200 ≈ 279/269 ≈ 1.04`
+* page 1 is always 'close to the heart' (i.e. in the lower left corner of the printing sheet)
 
 
 ## Discussion of Alternative Solutions
