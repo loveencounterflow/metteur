@@ -26,6 +26,7 @@ page_template             = """
     \\end{tikzpicture}""".replace /\s*\n\s*/g, ''
 
 layout =
+  orientation: 'ltr' # or 'rtl' which will invert the orientation of all pages, allowing for CJK, Arabic RTL books
   recto:
     left:   [  4, 13, 16,  1, ]
     right:  [  5, 12,  9,  8, ]
@@ -44,6 +45,7 @@ demo = ->
   ### TAINT precompute using named values ###
   width           = 297 / 4
   height          = 210 / 2
+  orientation     = if layout.orientation is 'ltr' then +1 else -1
   for side in [ 'recto', 'verso', ]
     template = template.replace /(?=❰content❱)/g, '\\newpage%\n' if side is 'verso'
     sheet = layout[ side ]
@@ -51,10 +53,10 @@ demo = ->
       ### TAINT precompute using named values ###
       if column is 'left'
         xshift  = 0 + correction.x
-        angle   = +90
+        angle   = -90 * orientation
       else
         xshift  = 210 / 2 + correction.x
-        angle   = -90
+        angle   = +90 * orientation
       for page_nr, page_idx in sheet[ column ]
         yshift = -( 297 / 4 ) * page_idx + correction.y ### TAINT precompute using named values ###
         page  = page_template
