@@ -41,7 +41,7 @@ demo = ->
   source_path     = resolve '16-page-booklet.pdf'
   template        = FS.readFileSync template_path, { encoding: 'utf-8', }
   # correction      = { x: -3.5, y: +3.5, }
-  correction      = { x: -1, y: +1, }
+  correction      = { x: -2, y: +1.5, }
   ### TAINT precompute using named values ###
   width           = 297 / 4
   height          = 210 / 2
