@@ -36,9 +36,9 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="1.4142136"
-     inkscape:cx="330.21887"
-     inkscape:cy="623.31463"
+     inkscape:zoom="1"
+     inkscape:cx="280"
+     inkscape:cy="209.5"
      inkscape:window-width="1920"
      inkscape:window-height="1013"
      inkscape:window-x="0"
@@ -463,34 +463,6 @@ Options for color, precision, label formatting and display
        id="filter447"
        inkscape:label="filter0" />
     <marker
-       id="ArrowDIN-start"
-       class="path445 path-effect9973 measure-arrow-marker"
-       inkscape:stockid="ArrowDIN-start"
-       orient="auto"
-       refX="0.0"
-       refY="0.0"
-       sodipodi:insensitive="true">
-      <path
-         d="M -8,0 8,-2.11 8,2.11 z"
-         class="path445 path-effect9973 measure-arrow"
-         id="ArrowDIN-start_path"
-         style="fill:context-stroke;;fill-opacity:1;stroke:none" />
-    </marker>
-    <marker
-       id="ArrowDIN-end"
-       class="path445 path-effect9973 measure-arrow-marker"
-       inkscape:stockid="ArrowDIN-end"
-       orient="auto"
-       refX="0.0"
-       refY="0.0"
-       sodipodi:insensitive="true">
-      <path
-         d="M 8,0 -8,2.11 -8,-2.11 z"
-         class="path445 path-effect9973 measure-arrow"
-         id="ArrowDIN-end_path"
-         style="fill:context-stroke;;fill-opacity:1;stroke:none" />
-    </marker>
-    <marker
        id="ArrowDINout-start"
        class="path445 path-effect9973 measure-arrow-marker"
        inkscape:stockid="ArrowDINout-start"
@@ -516,6 +488,34 @@ Options for color, precision, label formatting and display
          d="M 0,0 16,-2.11 16,-0.5 26,-0.5 26,0.5 16,0.5 16,2.11 z"
          class="path445 path-effect9973 measure-arrow"
          id="ArrowDINout-end_path"
+         style="fill:context-stroke;;fill-opacity:1;stroke:none" />
+    </marker>
+    <marker
+       id="ArrowDIN-start"
+       class="path13511 path-effect13515 measure-arrow-marker"
+       inkscape:stockid="ArrowDIN-start"
+       orient="auto"
+       refX="0.0"
+       refY="0.0"
+       sodipodi:insensitive="true">
+      <path
+         d="M -8,0 8,-2.11 8,2.11 z"
+         class="path13511 path-effect13515 measure-arrow"
+         id="ArrowDIN-start_path"
+         style="fill:context-stroke;;fill-opacity:1;stroke:none" />
+    </marker>
+    <marker
+       id="ArrowDIN-end"
+       class="path13511 path-effect13515 measure-arrow-marker"
+       inkscape:stockid="ArrowDIN-end"
+       orient="auto"
+       refX="0.0"
+       refY="0.0"
+       sodipodi:insensitive="true">
+      <path
+         d="M 8,0 -8,2.11 -8,-2.11 z"
+         class="path13511 path-effect13515 measure-arrow"
+         id="ArrowDIN-end_path"
          style="fill:context-stroke;;fill-opacity:1;stroke:none" />
     </marker>
   </defs>
@@ -3107,13 +3107,6 @@ Options for color, precision, label formatting and display
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1">
-    <rect
-       style="fill:none;fill-opacity:0.27875;stroke:#fc0d0d;stroke-width:0.94488;stroke-linejoin:round;paint-order:markers fill stroke;stop-color:#000000"
-       id="rect231"
-       width="830.55121"
-       height="1159.3701"
-       x="-18.425198"
-       y="-18.425198" />
     <path
        style="fill:none;fill-opacity:0.27875;stroke:#fc0d0d;stroke-width:0.294681;stroke-linejoin:round;paint-order:markers fill stroke;stop-color:#000000"
        d="M 143.28603,69.74124 V 419.82265"
@@ -3131,24 +3124,6 @@ Options for color, precision, label formatting and display
        inkscape:original-d="m 143.28603,69.74124 -247.38497,-1e-6"
        class="UnoptimicedTransforms"
        transform="matrix(3.2064534,0,0,3.2064534,333.78839,-168.94012)"
-       sodipodi:nodetypes="cc" />
-    <path
-       style="fill:none;fill-opacity:0.27875;stroke:#fc0d0d;stroke-width:0.28782;stroke-linejoin:round;paint-order:markers fill stroke;stop-color:#000000"
-       d="m 143.28603,69.74124 -247.38497,-1e-6"
-       id="path13397"
-       inkscape:path-effect="#path-effect13401"
-       inkscape:original-d="m 143.28603,69.74124 -247.38497,-1e-6"
-       class="UnoptimicedTransforms"
-       transform="matrix(3.3611423,0,0,3.2064534,330.99371,-119.31463)"
-       sodipodi:nodetypes="cc" />
-    <path
-       style="fill:none;fill-opacity:0.27875;stroke:#fc0d0d;stroke-width:0.285082;stroke-linejoin:round;paint-order:markers fill stroke;stop-color:#000000"
-       d="M 143.28603,69.74124 V 419.82265"
-       id="path13433"
-       inkscape:path-effect="#path-effect13437"
-       inkscape:original-d="M 143.28603,69.74124 V 419.82265"
-       class="UnoptimicedTransforms"
-       transform="matrix(3.3144147,0,0,3.3144147,-271.62366,-250.04903)"
        sodipodi:nodetypes="cc" />
     <rect
        style="fill:none;fill-opacity:0.27875;stroke:#fc0d0d;stroke-width:0.944882;stroke-linejoin:round;stroke-dasharray:none;paint-order:markers fill stroke;stop-color:#000000"
@@ -3247,69 +3222,6 @@ Options for color, precision, label formatting and display
      inkscape:label="dinline"
      style="marker-start:url(#ArrowDIN-start);marker-end:url(#ArrowDIN-end);stroke-width:0.25;stroke:#000000;stroke-opacity:1" />
   <path
-     id="infoline-on-start-0-path-effect13401"
-     class="path13397 path-effect13401 measure-helper-line measure-line"
-     d="m 812.59845,104.30741 v 16"
-     sodipodi:insensitive="true"
-     inkscape:label="dinhelpline"
-     style="stroke-width:0.25;stroke:#000000;stroke-opacity:1" />
-  <text
-     xml:space="preserve"
-     id="text-on-0-path-effect13401"
-     class="path13397 path-effect13401 measure-label"
-     sodipodi:insensitive="true"
-     x="378.58278"
-     y="119.25852"
-     style="font-family:Sans;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;fill:#000000;fill-opacity:1;font-size:9.87778px"><tspan
-       sodipodi:role="line"
-       id="tspan13405">220mm</tspan></text>
-  <path
-     id="infoline-on-end-0-path-effect13401"
-     class="path13397 path-effect13401 measure-helper-line measure-line"
-     d="m -18.897641,104.3074 v 16"
-     sodipodi:insensitive="true"
-     inkscape:label="dinhelpline"
-     style="stroke-width:0.25;stroke:#000000;stroke-opacity:1" />
-  <path
-     id="infoline-0-path-effect13401"
-     class="path13397 path-effect13401 measure-DIM-line measure-line"
-     d="M 810.59845,116.30741 H 418.34172 m -42.98264,-1e-5 H -16.897641"
-     sodipodi:insensitive="true"
-     inkscape:label="dinline"
-     style="marker-start:url(#ArrowDIN-start);marker-end:url(#ArrowDIN-end);stroke-width:0.25;stroke:#000000;stroke-opacity:1" />
-  <path
-     id="infoline-on-start-0-path-effect13437"
-     class="path13433 path-effect13437 measure-helper-line measure-line"
-     d="m 203.28566,-18.897639 h 16"
-     sodipodi:insensitive="true"
-     inkscape:label="dinhelpline"
-     style="stroke-width:0.25;stroke:#000000;stroke-opacity:1" />
-  <text
-     xml:space="preserve"
-     id="text-on-0-path-effect13437"
-     class="path13433 path-effect13437 measure-label"
-     sodipodi:insensitive="true"
-     x="199.98362"
-     y="561.25985"
-     style="font-family:Sans;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;fill:#000000;fill-opacity:1;font-size:9.87778px"
-     transform="rotate(-90,218.23678,561.25985)"><tspan
-       sodipodi:role="line"
-       id="tspan13441">307mm</tspan></text>
-  <path
-     id="infoline-on-end-0-path-effect13437"
-     class="path13433 path-effect13437 measure-helper-line measure-line"
-     d="m 203.28566,1141.4173 h 16"
-     sodipodi:insensitive="true"
-     inkscape:label="dinhelpline"
-     style="stroke-width:0.25;stroke:#000000;stroke-opacity:1" />
-  <path
-     id="infoline-0-path-effect13437"
-     class="path13433 path-effect13437 measure-DIM-line measure-line"
-     d="M 215.28566,-16.897639 V 539.78555 m 0,42.9486 v 556.68315"
-     sodipodi:insensitive="true"
-     inkscape:label="dinline"
-     style="marker-start:url(#ArrowDIN-start);marker-end:url(#ArrowDIN-end);stroke-width:0.25;stroke:#000000;stroke-opacity:1" />
-  <path
      id="infoline-on-start-0-path-effect13477"
      class="path13473 path-effect13477 measure-helper-line measure-line"
      d="m 397.32285,163.84594 0.0177,15.99999"
@@ -3353,7 +3265,7 @@ Options for color, precision, label formatting and display
      id="text-on-0-path-effect13515"
      class="path13511 path-effect13515 measure-label"
      sodipodi:insensitive="true"
-     x="257.76898"
+     x="254.62671"
      y="126.33986"
      style="font-family:Sans;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;fill:#000000;fill-opacity:1;font-size:9.87778px"
      transform="rotate(-89.734185,277.56313,126.33986)"><tspan
@@ -3369,7 +3281,7 @@ Options for color, precision, label formatting and display
   <path
      id="infoline-0-path-effect13515"
      class="path13511 path-effect13515 measure-DIM-line measure-line"
-     d="m 275.27626,-16.841989 -0.55618,119.881179 m -0.21607,46.57395 -0.55617,119.88118"
+     d="m 275.27626,-16.841989 -0.53903,116.184425 m -0.25037,53.967454 -0.53902,116.18443"
      sodipodi:insensitive="true"
      inkscape:label="dinline"
      style="marker-start:url(#ArrowDIN-start);marker-end:url(#ArrowDIN-end);stroke-width:0.25;stroke:#000000;stroke-opacity:1" />
