@@ -16,7 +16,9 @@ GUY                       = require 'guy'
 PATH                      = require 'path'
 FS                        = require 'fs'
 resolve                   = ( P... ) -> PATH.resolve PATH.join __dirname, '..', P...
-types                     = new ( require 'intertype' ).Intertype()
+types                     = require './types'
+{ hide }                  = GUY.props
+{ freeze }                = GUY.lft
 # { equals }                = types
 # { HDML }                  = require 'hdml'
 page_template             = """
@@ -34,20 +36,55 @@ layout =
     left:   [  6, 11, 10,  7, ]
     right:  [  3, 14, 15,  2, ]
 
-#-----------------------------------------------------------------------------------------------------------
-### thx to https://stackoverflow.com/a/6969486/7568091 and https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#escaping ###
-@_escape_literal_for_regex = ( literal ) -> literal.replace /[.*+?^${}()|[\]\\]/g, '\\$&'
 
-#-----------------------------------------------------------------------------------------------------------
-@interpolate = ( template, Q ) ->
-  R = template
-  R = R.replace /// ❰ (?<key>[^❱]*) ❱ ///g, ( _..., { key, } ) ->
-    if key.startsWith '...'
-      key = key[ 3 ... ]
-    unless ( value = Q[ key ] )?
-      throw new Error "unknown key #{rpr groups.key}"
-    return value
-  return R
+#===========================================================================================================
+# types.declare 'tmpltr_cfg',
+
+#===========================================================================================================
+class @Template extends GUY.props.Strict_owner
+
+  #---------------------------------------------------------------------------------------------------------
+  constructor: ( cfg ) ->
+    super()
+    hide @, 'types', types
+    @cfg    = new GUY.props.Strict_owner { target: ( @types.create.mtr_new_template cfg ), freeze: true, }
+    #.......................................................................................................
+    open    = @_escape_literal_for_regex @cfg.open
+    close   = @_escape_literal_for_regex @cfg.close
+    hide @, '_cfg', freeze
+      open:   open
+      close:  close
+      rx:     /// #{open} (?<key>[^#{close}]*) #{close} ///g
+    #.......................................................................................................
+    # for
+    return undefined
+
+  #---------------------------------------------------------------------------------------------------------
+  fill: ( cfg ) ->
+    cfg = @types.create.mtr_template_fill cfg
+    R   = @cfg.template
+    R   = R.replace @_cfg.rx, ( _..., { key, } ) ->
+      # if key.startsWith '...'
+      #   key = key[ 3 ... ]
+      unless ( value = cfg[ key ] )?
+        throw new Error "unknown key #{rpr groups.key}"
+      return value
+    return R
+
+  #---------------------------------------------------------------------------------------------------------
+  ### thx to https://stackoverflow.com/a/6969486/7568091 and
+  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#escaping ###
+  _escape_literal_for_regex: ( literal ) -> literal.replace /[.*+?^${}()|[\]\\]/g, '\\$&'
+
+
+
+#===========================================================================================================
+class Metteur extends GUY.props.Strict_owner
+
+  #---------------------------------------------------------------------------------------------------------
+  constructor: ( cfg ) ->
+    super()
+    return undefined
 
 #-----------------------------------------------------------------------------------------------------------
 @demo = ->
