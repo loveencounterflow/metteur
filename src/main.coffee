@@ -75,21 +75,23 @@ class @Template extends GUY.props.Strict_owner
     { isa
       type_of }     = @types
     isa_text        = isa.text
+    do_format       = @cfg.format?
     ### TAINT when only filling some keys, might be better to search for those patterns only ###
     R               = R.replace @_cfg.rx, ( $0, ..., { key, } ) =>
       dots = false
       if key.startsWith '...'
         dots  = 'open'
         key   = key[ 3 ... ]
-      v = get cfg, key, misfit
-      if v is misfit
+      value = get cfg, key, misfit
+      if value is misfit
         return $0 if mode is 'some'
         throw new Error "unknown key #{rpr key}"
-      throw new Error "expected text, got a #{type_of v}" unless isa_text v
+      value = @cfg.format value, key if do_format
+      throw new Error "expected text, got a #{type_of value}" unless isa_text value
       return switch dots
-        when 'open' then "#{v}#{@cfg.open}...#{key}#{@cfg.close}"
-        else v
-    @_intermediate  = R
+        when 'open' then "#{value}#{@cfg.open}...#{key}#{@cfg.close}"
+        else value
+    @_intermediate = R
     return R
 
   #---------------------------------------------------------------------------------------------------------

@@ -18,15 +18,16 @@ types.declare.mtr_new_template
   $template:    'text'
   $open:        'nonempty.text'
   $close:       'nonempty.text'
-  $rpr:         'optional.function'
-  extras:       false
+    ### TAINT would use default `optional.function` but for outstanding bug in `intertype` ###
+  $format:      'function'
+  # extras:       false
   default:
     template:     null
     open:         '{'
     close:        '}'
-    # rpr:          id = ( x ) -> x
-    rpr:          null
-  # create: ( cfg ) -> { @registry.mtr_new_template.default..., cfg..., }
+    ### TAINT would use default `null` but for outstanding bug in `intertype` ###
+    # format:       null
+    format:       id = ( value, key ) -> value
 
 #-----------------------------------------------------------------------------------------------------------
 types.declare.mtr_template_fill
