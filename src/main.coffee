@@ -17,7 +17,9 @@ PATH                      = require 'path'
 FS                        = require 'fs'
 resolve                   = ( P... ) -> PATH.resolve PATH.join __dirname, '..', P...
 types                     = require './types'
+misfit                    = Symbol 'misfit'
 { hide
+  get
   has  }                  = GUY.props
 { freeze }                = GUY.lft
 # { equals }                = types
@@ -43,6 +45,9 @@ layout =
 
 #===========================================================================================================
 class @Template extends GUY.props.Strict_owner
+
+  #---------------------------------------------------------------------------------------------------------
+  hide @, 'misfit', misfit
 
   #---------------------------------------------------------------------------------------------------------
   constructor: ( cfg ) ->
@@ -76,8 +81,10 @@ class @Template extends GUY.props.Strict_owner
       if key.startsWith '...'
         dots  = 'open'
         key   = key[ 3 ... ]
-      return $0 if mode is 'some' and not has cfg, key
-      throw new Error "unknown key #{rpr key}" unless ( v = cfg[ key ] )?
+      v = get cfg, key, misfit
+      if v is misfit
+        return $0 if mode is 'some'
+        throw new Error "unknown key #{rpr key}"
       throw new Error "expected text, got a #{type_of v}" unless isa_text v
       return switch dots
         when 'open' then "#{v}#{@cfg.open}...#{key}#{@cfg.close}"
