@@ -17,7 +17,8 @@ PATH                      = require 'path'
 FS                        = require 'fs'
 resolve                   = ( P... ) -> PATH.resolve PATH.join __dirname, '..', P...
 types                     = require './types'
-{ hide }                  = GUY.props
+{ hide
+  has  }                  = GUY.props
 { freeze }                = GUY.lft
 # { equals }                = types
 # { HDML }                  = require 'hdml'
@@ -51,6 +52,7 @@ class @Template extends GUY.props.Strict_owner
     #.......................................................................................................
     open    = @_escape_literal_for_regex @cfg.open
     close   = @_escape_literal_for_regex @cfg.close
+    hide @, '_intermediate'
     hide @, '_cfg', freeze
       open:   open
       close:  close
@@ -60,16 +62,36 @@ class @Template extends GUY.props.Strict_owner
     return undefined
 
   #---------------------------------------------------------------------------------------------------------
-  fill: ( cfg ) ->
-    cfg = @types.create.mtr_template_fill cfg
-    R   = @cfg.template
-    R   = R.replace @_cfg.rx, ( _..., { key, } ) ->
-      # if key.startsWith '...'
-      #   key = key[ 3 ... ]
-      unless ( value = cfg[ key ] )?
-        throw new Error "unknown key #{rpr groups.key}"
-      return value
+  _fill: ( mode, cfg ) ->
+    ### TAINT code duplication ###
+    cfg             = @types.create.mtr_template_fill cfg
+    @_intermediate ?= @cfg.template
+    R               = @_intermediate
+    { isa
+      type_of }     = @types
+    isa_text        = isa.text
+    ### TAINT when only filling some keys, might be better to search for those patterns only ###
+    R               = R.replace @_cfg.rx, ( $0, ..., { key, } ) =>
+      dots = false
+      if key.startsWith '...'
+        dots  = 'open'
+        key   = key[ 3 ... ]
+      return $0 if mode is 'some' and not has cfg, key
+      throw new Error "unknown key #{rpr key}" unless ( v = cfg[ key ] )?
+      throw new Error "expected text, got a #{type_of v}" unless isa_text v
+      return switch dots
+        when 'open' then "#{v}#{@cfg.open}...#{key}#{@cfg.close}"
+        else v
+    @_intermediate  = R
     return R
+
+  #---------------------------------------------------------------------------------------------------------
+  fill_all:   ( cfg ) -> @_fill 'all',  cfg
+  fill_some:  ( cfg ) -> @_fill 'some', cfg
+
+  #---------------------------------------------------------------------------------------------------------
+  finish: -> @_intermediate = ( @_intermediate ? @cfg.template ).replace @_cfg.rx, ''
+  peek:   -> @_intermediate ? @cfg.template
 
   #---------------------------------------------------------------------------------------------------------
   ### thx to https://stackoverflow.com/a/6969486/7568091 and
