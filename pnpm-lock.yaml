@@ -2,11 +2,11 @@ lockfileVersion: 5.4
 
 specifiers:
   guy: ^11.8.0
-  intertype: ^10.1.0
+  intertype: 10.1.2
 
 dependencies:
   guy: 11.8.0
-  intertype: 10.1.0
+  intertype: 10.1.2
 
 packages:
 
@@ -49,11 +49,12 @@ packages:
       multimix: 5.0.0
     dev: false
 
-  /intertype/10.1.0:
-    resolution: {integrity: sha512-KsO8iYx31U1ApABuXWiJQsDQvsJvxJYh7laW78WiA8xs5rDxD6nq98LaMshdbstoksWGtxf4hda99l0DhhL/Hw==}
+  /intertype/10.1.2:
+    resolution: {integrity: sha512-zMCP32DkDh2ZFsV0VGv2M3svFAKGDp64D+QIw9In0yvshfTtZGqe9u9L4Y4gCIbNWHPWVaronP0MaojaMcTh8w==}
     dependencies:
       guy: 11.6.0
       intertype-legacy: 7.7.1
+      rfdc: 1.3.0
       to-width: 1.2.0
     transitivePeerDependencies:
       - acorn
@@ -73,6 +74,10 @@ packages:
 
   /multimix/5.0.0:
     resolution: {integrity: sha512-N9cdGSDDD7kxOV7R6e4iZqsHTZ4F4iiSDWqMcVqx4gEH6HBtRXav39Gj3fgT1YqvBcwPCQuf0Oa5R2cDaLWK8A==}
+    dev: false
+
+  /rfdc/1.3.0:
+    resolution: {integrity: sha512-V2hovdzFbOi77/WajaSMXk2OLm+xNIeQdMMuB7icj7bk6zi2F8GGAxigcnDFpJHbNyNcgyJDiP+8nOrY5cZGrA==}
     dev: false
 
   /string-width/4.2.3:
