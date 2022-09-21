@@ -57,8 +57,9 @@ class @Template extends GUY.props.Strict_owner
     #.......................................................................................................
     open    = @_escape_literal_for_regex @cfg.open
     close   = @_escape_literal_for_regex @cfg.close
-    hide @, '_segments',  []
-    hide @, '_marks',     {}
+    hide @, '_segments',        []
+    hide @, '_mark_idxs',       {}
+    hide @, '_idx_directions',  {}
     hide @, '_cfg', freeze
       open:   open
       close:  close
@@ -72,8 +73,15 @@ class @Template extends GUY.props.Strict_owner
     is_mark = true
     for segment_or_mark, idx in @cfg.template.split @_cfg.rx
       if is_mark = not is_mark
+        direction = 'append'
+        if segment_or_mark.startsWith '...'
+          segment_or_mark = segment_or_mark[ 3 ... ]
+        else if segment_or_mark.endsWith '...'
+          segment_or_mark = segment_or_mark[ ... segment_or_mark.length - 3 ]
+          direction = 'prepend'
         @_segments.push []
-        ( @_marks[ segment_or_mark ] ?= [] ).push idx
+        ( @_mark_idxs[ segment_or_mark ] ?= [] ).push idx
+        @_idx_directions[ idx ]           = direction
       else
         @_segments.push segment_or_mark
     return null
@@ -85,14 +93,15 @@ class @Template extends GUY.props.Strict_owner
       type_of }     = @types
     isa_text        = isa.text
     do_format       = @cfg.format?
-    for key, idxs of @_marks
+    for key, idxs of @_mark_idxs
       if ( value = get cfg, key, misfit ) is misfit
         continue if mode is 'some'
         throw new Error "unknown key #{rpr key}"
       value = @cfg.format value, key if do_format
       throw new Error "expected text, got a #{type_of value} for key #{rpr key}" unless isa_text value
-      debug '^353-1^', idxs
-      @_segments[ idx ].push value for idx in idxs
+      for idx in idxs
+        if @_idx_directions[ idx ] is 'append' then @_segments[ idx ].push    value
+        else                                        @_segments[ idx ].unshift value
     return null
 
   #---------------------------------------------------------------------------------------------------------
@@ -100,10 +109,18 @@ class @Template extends GUY.props.Strict_owner
   fill_some:  ( cfg ) -> @_fill 'some', cfg
 
   #---------------------------------------------------------------------------------------------------------
-  finish: -> @peek() ### TAINT deprecate ###
+  clear: ->
+    @_segments[ idx ] = [] for idx in [ 1 ... @_segments.length ] by +2
+    return null
+
+  #---------------------------------------------------------------------------------------------------------
+  finish: ->
+    R = @peek()
+    @clear()
+    return R
+
+  #---------------------------------------------------------------------------------------------------------
   peek:   ->
-    debug '^353-1^', @_segments
-    debug '^353-2^', @_segments.flat()
     @_segments.flat().join ''
 
   #---------------------------------------------------------------------------------------------------------
