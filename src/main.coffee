@@ -57,50 +57,54 @@ class @Template extends GUY.props.Strict_owner
     #.......................................................................................................
     open    = @_escape_literal_for_regex @cfg.open
     close   = @_escape_literal_for_regex @cfg.close
-    hide @, '_intermediate'
+    hide @, '_segments',  []
+    hide @, '_marks',     {}
     hide @, '_cfg', freeze
       open:   open
       close:  close
       rx:     /// #{open} (?<key>[^#{close}]*) #{close} ///g
     #.......................................................................................................
-    # for
+    @_compile()
     return undefined
 
   #---------------------------------------------------------------------------------------------------------
+  _compile: ->
+    is_mark = true
+    for segment_or_mark, idx in @cfg.template.split @_cfg.rx
+      if is_mark = not is_mark
+        @_segments.push []
+        ( @_marks[ segment_or_mark ] ?= [] ).push idx
+      else
+        @_segments.push segment_or_mark
+    return null
+
+  #---------------------------------------------------------------------------------------------------------
   _fill: ( mode, cfg ) ->
-    ### TAINT code duplication ###
     cfg             = @types.create.mtr_template_fill cfg
-    @_intermediate ?= @cfg.template
-    R               = @_intermediate
     { isa
       type_of }     = @types
     isa_text        = isa.text
     do_format       = @cfg.format?
-    ### TAINT when only filling some keys, might be better to search for those patterns only ###
-    R               = R.replace @_cfg.rx, ( $0, ..., { key, } ) =>
-      dots = false
-      if key.startsWith '...'
-        dots  = 'open'
-        key   = key[ 3 ... ]
-      value = get cfg, key, misfit
-      if value is misfit
-        return $0 if mode is 'some'
+    for key, idxs of @_marks
+      if ( value = get cfg, key, misfit ) is misfit
+        continue if mode is 'some'
         throw new Error "unknown key #{rpr key}"
       value = @cfg.format value, key if do_format
-      throw new Error "expected text, got a #{type_of value}" unless isa_text value
-      return switch dots
-        when 'open' then "#{value}#{@cfg.open}...#{key}#{@cfg.close}"
-        else value
-    @_intermediate = R
-    return R
+      throw new Error "expected text, got a #{type_of value} for key #{rpr key}" unless isa_text value
+      debug '^353-1^', idxs
+      @_segments[ idx ].push value for idx in idxs
+    return null
 
   #---------------------------------------------------------------------------------------------------------
   fill_all:   ( cfg ) -> @_fill 'all',  cfg
   fill_some:  ( cfg ) -> @_fill 'some', cfg
 
   #---------------------------------------------------------------------------------------------------------
-  finish: -> @_intermediate = ( @_intermediate ? @cfg.template ).replace @_cfg.rx, ''
-  peek:   -> @_intermediate ? @cfg.template
+  finish: -> @peek() ### TAINT deprecate ###
+  peek:   ->
+    debug '^353-1^', @_segments
+    debug '^353-2^', @_segments.flat()
+    @_segments.flat().join ''
 
   #---------------------------------------------------------------------------------------------------------
   ### thx to https://stackoverflow.com/a/6969486/7568091 and
