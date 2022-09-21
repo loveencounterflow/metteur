@@ -58,3 +58,8 @@
     selecting `File > Print...`) and Scribus will export a 200MB heavyweight. I uploaded that to the Adobe
     PDF compressing service and they came back to me with a slim 144kB feather weight, less than 1/1000 of
     the file output by Scribus.
+
+## Internals
+
+* see [README for internals](./README-internals.md) like templating used to build the TeX source for the
+  assembled booklet
