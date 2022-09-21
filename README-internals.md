@@ -7,10 +7,10 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [Metteur](#metteur)
-  - [Terminology](#terminology)
-  - [16-page Booklet](#16-page-booklet)
-  - [Discussion of Alternative Solutions](#discussion-of-alternative-solutions)
+- [Internals](#internals)
+  - [Templating](#templating)
+  - [To Do](#to-do)
+  - [Is Done](#is-done)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
