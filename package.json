@@ -11,6 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "guy": "^11.8.0",
-    "intertype": "10.1.2"
+    "intertype": "10.1.2",
+    "mixa": "^0.6.1"
   }
 }
