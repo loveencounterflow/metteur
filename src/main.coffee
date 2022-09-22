@@ -17,6 +17,7 @@ PATH                      = require 'path'
 FS                        = require 'fs'
 resolve                   = ( P... ) -> PATH.resolve PATH.join __dirname, '..', P...
 types                     = require './types'
+{ isa }                   = types
 misfit                    = Symbol 'misfit'
 { hide
   get
@@ -25,10 +26,10 @@ misfit                    = Symbol 'misfit'
 # { equals }                = types
 # { HDML }                  = require 'hdml'
 page_template             = """
-  \\begin{tikzpicture}[overlay,remember picture]
-  \\node[anchor=north west,xshift=❰xshift❱mm,yshift=❰yshift❱mm] at (current page.north west){
-    \\fbox{\\includegraphics[width=❰width❱mm,height=❰height❱mm,angle=❰angle❱,page=❰page_nr❱]{❰source_path❱}}};
-    \\end{tikzpicture}""".replace /\s*\n\s*/g, ''
+  \\begin{tikzpicture}[overlay,remember picture]%
+  \\node[anchor=north west,xshift=❰xshift❱mm,yshift=❰yshift❱mm] at (current page.north west){%
+    \\fbox{\\includegraphics[width=❰width❱mm,height=❰height❱mm,angle=❰angle❱,page=❰page_nr❱]{❰source_path❱}}};%
+    \\end{tikzpicture}% ❰side❱ ❰column❱ r❰page_idx1❱ p❰page_nr❱\n"""#.replace /\s*\n\s*/g, ''
 
 layout =
   orientation: 'ltr' # or 'rtl' which will invert the orientation of all pages, allowing for CJK, Arabic RTL books
@@ -44,7 +45,7 @@ layout =
 # types.declare 'tmpltr_cfg',
 
 #===========================================================================================================
-class @Template extends GUY.props.Strict_owner
+class Template extends GUY.props.Strict_owner
 
   #---------------------------------------------------------------------------------------------------------
   hide @, 'misfit', misfit
@@ -132,52 +133,72 @@ class Metteur extends GUY.props.Strict_owner
     super()
     return undefined
 
+  #---------------------------------------------------------------------------------------------------------
+  xxx: ->
+    template_path   = resolve 'tex/booklet.template.tex'
+    tex_target_path = resolve 'tex/booklet.tex'
+    source_path     = resolve '../metteur-booklets/textura.booklet.pdf'
+    # source_path     = resolve '16-page-booklet.pdf'
+    doc_template    = FS.readFileSync template_path, { encoding: 'utf-8', }
+    format          = ( x ) -> if isa.text x then x else rpr x
+    doc_tpl         = new Template { template: doc_template,  open: '❰', close: '❱', format, }
+    page_tpl        = new Template { template: page_template, open: '❰', close: '❱', format, }
+    #.......................................................................................................
+    Q               = new GUY.props.Strict_owner target:
+      # frame_weight:     '0.25mm'
+      frame_weight:     '0mm'
+      xshift:           Template.misfit
+      yshift:           Template.misfit
+      angle:            Template.misfit
+      width:            Template.misfit
+      height:           Template.misfit
+      side:             Template.misfit
+      column:           Template.misfit
+      page_nr:          Template.misfit
+      page_idx1:        Template.misfit
+      source_path:      source_path
+    #.......................................................................................................
+    # correction      = { x: -3.5, y: +3.5, }
+    correction      = { x: -2, y: +1.5, }
+    ### TAINT precompute using named values ###
+    Q.width         = 297 / 4
+    Q.height        = 210 / 2
+    orientation     = if layout.orientation is 'ltr' then +1 else -1
+    for _side in [ 'recto', 'verso', ]
+      Q.side  = _side
+      sheet   = layout[ Q.side ]
+      doc_tpl.fill_some { content: '\\newpage%\n', } if Q.side is 'verso'
+      for _column in [ 'left', 'right', ]
+        Q.column = _column
+        ### TAINT precompute using named values ###
+        if Q.column is 'left'
+          Q.xshift  = 0 + correction.x
+          Q.angle   = -90 * orientation
+        else
+          Q.xshift  = 210 / 2 + correction.x
+          Q.angle   = +90 * orientation
+        for _page_nr, _page_idx in sheet[ Q.column ]
+          Q.page_nr   = _page_nr
+          Q.page_idx  = _page_idx
+          Q.page_idx1 = _page_idx + 1
+          Q.yshift    = -( 297 / 4 ) * Q.page_idx + correction.y ### TAINT precompute using named values ###
+          page_tpl.fill_all Q
+          page  = page_tpl.finish()
+          doc_tpl.fill_some { content: page, }
+    doc_tpl.fill_some { frame_weight: Q.frame_weight, }
+    # template = @interpolate template, Q
+    FS.writeFileSync tex_target_path, doc_tpl.finish()
+    help "wrote output to #{tex_target_path}"
+    #.......................................................................................................
+    return null
+
+#===========================================================================================================
+module.exports = { Template, Metteur, }
+
 #-----------------------------------------------------------------------------------------------------------
 @demo = ->
-  template_path   = resolve 'tex/booklet.template.tex'
-  tex_target_path = resolve 'tex/booklet.tex'
-  source_path     = resolve '../metteur-booklets/textura.booklet.pdf'
-  # source_path     = resolve '16-page-booklet.pdf'
-  template        = FS.readFileSync template_path, { encoding: 'utf-8', }
-  #.........................................................................................................
-  Q               =
-    # frame_weight:     '0.25mm'
-    frame_weight:     '0mm'
-  #.........................................................................................................
-  # correction      = { x: -3.5, y: +3.5, }
-  correction      = { x: -2, y: +1.5, }
-  ### TAINT precompute using named values ###
-  width           = 297 / 4
-  height          = 210 / 2
-  orientation     = if layout.orientation is 'ltr' then +1 else -1
-  for side in [ 'recto', 'verso', ]
-    template = template.replace /(?=❰\.\.\.content❱)/g, '\\newpage%\n' if side is 'verso'
-    sheet = layout[ side ]
-    for column in [ 'left', 'right', ]
-      ### TAINT precompute using named values ###
-      if column is 'left'
-        xshift  = 0 + correction.x
-        angle   = -90 * orientation
-      else
-        xshift  = 210 / 2 + correction.x
-        angle   = +90 * orientation
-      for page_nr, page_idx in sheet[ column ]
-        yshift = -( 297 / 4 ) * page_idx + correction.y ### TAINT precompute using named values ###
-        page  = page_template
-        page  = page.replace /❰xshift❱/g,   xshift
-        page  = page.replace /❰yshift❱/g,   yshift
-        page  = page.replace /❰angle❱/g,    angle
-        page  = page.replace /❰width❱/g,    width
-        page  = page.replace /❰height❱/g,   height
-        page  = page.replace /❰page_nr❱/g,  page_nr
-        page  = page.replace /❰source_path❱/g,  source_path
-        page += " % #{side} #{column} r#{page_idx + 1} p#{page_nr}\n"
-        template = template.replace /(?=❰\.\.\.content❱)/g, page
-  template = template.replace /❰\.\.\.content❱/g, ''
-  template = template.replace /❰frame_weight❱/g, Q.frame_weight
-  # template = @interpolate template, Q
-  FS.writeFileSync tex_target_path, template
-  help "wrote output to #{tex_target_path}"
+  mtr = new Metteur()
+  mtr.xxx()
   return null
 
 
