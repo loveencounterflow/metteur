@@ -12,6 +12,7 @@
   - [16-page Booklet](#16-page-booklet)
   - [Discussion of Alternative Solutions](#discussion-of-alternative-solutions)
   - [Internals](#internals)
+- [To Do](#to-do)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -64,3 +65,9 @@
 
 * see [README for internals](./README-internals.md) like templating used to build the TeX source for the
   assembled booklet
+
+
+# To Do
+
+* **[–]** implement `--help` option for CLI
+
