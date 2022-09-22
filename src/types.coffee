@@ -30,6 +30,15 @@ types.declare.mtr_new_template
     format:       id = ( value, key ) -> value
 
 #-----------------------------------------------------------------------------------------------------------
+types.declare.mtr_cli_impose_cfg
+  $input:       'nonempty.text'
+  $output:      'nonempty.text'
+  default:
+    input:      null
+    output:     null
+
+
+#-----------------------------------------------------------------------------------------------------------
 types.declare.mtr_template_fill
   isa: ( x ) ->
     return true
