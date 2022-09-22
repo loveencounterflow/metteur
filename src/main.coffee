@@ -144,7 +144,7 @@ class Metteur extends GUY.props.Strict_owner
     doc_tpl         = new Template { template: doc_template,  open: '❰', close: '❱', format, }
     page_tpl        = new Template { template: page_template, open: '❰', close: '❱', format, }
     #.......................................................................................................
-    Q               = new GUY.props.Strict_owner target:
+    Q               = new GUY.props.Strict_owner seal: true, target:
       # frame_weight:     '0.25mm'
       frame_weight:     '0mm'
       xshift:           Template.misfit
@@ -154,16 +154,17 @@ class Metteur extends GUY.props.Strict_owner
       height:           Template.misfit
       side:             Template.misfit
       column:           Template.misfit
+      orientation:      Template.misfit
       page_nr:          Template.misfit
+      page_idx:         Template.misfit
       page_idx1:        Template.misfit
       source_path:      source_path
+      correction:       { x: -2, y: +1.5, }
     #.......................................................................................................
-    # correction      = { x: -3.5, y: +3.5, }
-    correction      = { x: -2, y: +1.5, }
     ### TAINT precompute using named values ###
     Q.width         = 297 / 4
     Q.height        = 210 / 2
-    orientation     = if layout.orientation is 'ltr' then +1 else -1
+    Q.orientation   = if layout.orientation is 'ltr' then +1 else -1
     for _side in [ 'recto', 'verso', ]
       Q.side  = _side
       sheet   = layout[ Q.side ]
@@ -172,19 +173,18 @@ class Metteur extends GUY.props.Strict_owner
         Q.column = _column
         ### TAINT precompute using named values ###
         if Q.column is 'left'
-          Q.xshift  = 0 + correction.x
-          Q.angle   = -90 * orientation
+          Q.xshift  = 0 + Q.correction.x
+          Q.angle   = -90 * Q.orientation
         else
-          Q.xshift  = 210 / 2 + correction.x
-          Q.angle   = +90 * orientation
+          Q.xshift  = 210 / 2 + Q.correction.x
+          Q.angle   = +90 * Q.orientation
         for _page_nr, _page_idx in sheet[ Q.column ]
           Q.page_nr   = _page_nr
           Q.page_idx  = _page_idx
           Q.page_idx1 = _page_idx + 1
-          Q.yshift    = -( 297 / 4 ) * Q.page_idx + correction.y ### TAINT precompute using named values ###
+          Q.yshift    = -( 297 / 4 ) * Q.page_idx + Q.correction.y ### TAINT precompute using named values ###
           page_tpl.fill_all Q
-          page  = page_tpl.finish()
-          doc_tpl.fill_some { content: page, }
+          doc_tpl.fill_some { content: page_tpl.finish(), }
     doc_tpl.fill_some { frame_weight: Q.frame_weight, }
     # template = @interpolate template, Q
     FS.writeFileSync tex_target_path, doc_tpl.finish()
