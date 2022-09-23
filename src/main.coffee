@@ -134,11 +134,10 @@ class Metteur extends GUY.props.Strict_owner
     return undefined
 
   #---------------------------------------------------------------------------------------------------------
-  xxx: ->
+  impose: ( cfg ) ->
+    cfg             = types.create.mtr_impose_cfg cfg
     template_path   = resolve 'tex/booklet.template.tex'
     tex_target_path = resolve 'tex/booklet.tex'
-    source_path     = resolve '../metteur-booklets/textura.booklet.pdf'
-    # source_path     = resolve '16-page-booklet.pdf'
     doc_template    = FS.readFileSync template_path, { encoding: 'utf-8', }
     format          = ( x ) -> if isa.text x then x else rpr x
     doc_tpl         = new Template { template: doc_template,  open: '❰', close: '❱', format, }
@@ -158,7 +157,7 @@ class Metteur extends GUY.props.Strict_owner
       page_nr:          Template.misfit
       page_idx:         Template.misfit
       page_idx1:        Template.misfit
-      source_path:      source_path
+      source_path:      cfg.input
       correction:       { x: -2, y: +1.5, }
     #.......................................................................................................
     ### TAINT precompute using named values ###
@@ -196,7 +195,7 @@ class Metteur extends GUY.props.Strict_owner
 #-----------------------------------------------------------------------------------------------------------
 demo = ->
   mtr = new Metteur()
-  mtr.xxx()
+  mtr.impose()
   return null
 
 #===========================================================================================================

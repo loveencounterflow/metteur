@@ -14,89 +14,42 @@ GUY                       = require 'guy'
 { rpr
   echo }                  = GUY.trm
 #...........................................................................................................
-PATH                      = require 'path'
-FS                        = require 'fs'
+PATH                      = require 'node:path'
+FS                        = require 'fs-extra'
+CP                        = require 'node:child_process'
 types                     = require './types'
 { isa
   validate }              = types
 MIXA                      = require 'mixa'
-# { spawn }                 = require 'child_process'
-
-
-#===========================================================================================================
-#
-#-----------------------------------------------------------------------------------------------------------
-types.declare 'sql_insert_target_encoding', ( x ) -> x in [ 'binary', 'text', ]
-
-#-----------------------------------------------------------------------------------------------------------
-$echo_channels = ->
-  return $watch ( d ) =>
-    switch d.$key
-      when '^stdout' then echo CND.yellow d.$value
-      when '^stderr' then echo CND.red d.$value
-      else debug d #.$value
-    return null
+GUY                       = require 'guy'
+{ lime
+  blue
+  grey }                  = GUY.trm
+{ Metteur }               = require './main'
+{ to_width }              = require 'to-width'
 
 #-----------------------------------------------------------------------------------------------------------
-$process_nmap_output = ->
-  blank_re              = /^\s*$/
-  first_re              = /^Nmap scan report for (?<name>.*)\s+\((?<ip>[0-9a-f.]+)\)/
-  first_noname_re       = /^Nmap scan report for (?<ip>[0-9a-f.]+)$/
-  latency_re            = /^Host is up \((?<latency>\S+) latency\)\.$/
-  mac_re                = /^MAC Address: (?<mac>[0-9A-F:]+) \((?<info>.*)\)$/
-  entry                 = null
-  return $ ( d, send ) ->
-    return send d if d.$key in [ '<cp', '>cp', ]
-    if d.$key isnt '^stdout'
-      echo CND.red d.$value ? d
-      return
-    #.......................................................................................................
-    line = d.$value
-    return if ( line.match blank_re )?
-    return if line.startsWith 'Starting Nmap '
-    if line.startsWith 'Nmap done: '
-      send freeze entry if entry?
-      entry = null
-    else if ( match = line.match first_re )?
-      send freeze entry if entry?
-      entry = { match.groups..., }
-    else if ( match = line.match first_noname_re )?
-      send freeze entry if entry?
-      entry = { match.groups..., }
-    else if line is 'Host is up.'
-      entry.status = 'up'
-    else if ( match = line.match latency_re )?
-      entry.latency = match.groups.latency
-      entry.status = 'up'
-    else if ( match = line.match mac_re )?
-      entry.mac   = match.groups.mac
-      entry.info  = match.groups.info if match.groups.info? and ( match.groups.info isnt 'Unknown' )
-    else
-      echo CND.red '???', rpr line
-    # echo CND.grey d
-    return null
+resolve = ( P... ) ->
+  return PATH.resolve PATH.join P... if P[ 0 ].startsWith '/'
+  return PATH.resolve PATH.join process.env.cwd, P...
 
-#===========================================================================================================
-#
 #-----------------------------------------------------------------------------------------------------------
-show_hosts = -> new Promise ( resolve, reject ) =>
-  source      = SP.new_push_source()
-  pipeline    = []
-  pipeline.push source
-  pipeline.push SP.$split_channels()
-  pipeline.push $process_nmap_output()
-  pipeline.push $watch ( d ) ->
-    return if d.$key in [ '<cp', '>cp', ]
-    # echo CND.steel d
-    echo CND.yellow ( d.ip ? '?' ), ( d.name ? '?' ), ( '(' + ( d.info ? '?' ) + ')' )
-  # pipeline.push $show()
-  pipeline.push $drain -> resolve()
-  SP.pull pipeline...
-  cp = spawn 'sudo', [ 'nmap', '-sn', '192.168.190.0/24', ]
-  source.send x for await x from JFEE.Receiver.from_child_process cp
-  source.end()
-  #.........................................................................................................
+run_tex = ( d ) -> new Promise ( resolve, reject ) =>
+  cmd = PATH.resolve PATH.join __dirname, '../bin/run-tex'
+  debug '^3453^', cmd
+  debug '^3453^', "run #{cmd}"
+  cp = CP.spawn cmd, []
+  cp.stdout.setEncoding 'utf-8'
+  cp.stderr.setEncoding 'utf-8'
+  cp.stdout.on 'data', ( data ) -> help data
+  cp.stderr.on 'data', ( data ) -> urge data
+  # cp.on 'exit',  ( code, signal ) -> debug '^exit@3534^',  { code, signal, }; resolve()
+  cp.on 'close', ( code, signal ) -> debug '^close@3534^', { code, signal, }; resolve()
   return null
+
+#-----------------------------------------------------------------------------------------------------------
+move_output_to_target = ( d ) ->
+  FS.moveSync
 
 
 #===========================================================================================================
@@ -105,14 +58,32 @@ show_hosts = -> new Promise ( resolve, reject ) =>
 @cli = ->
   #.........................................................................................................
   jobdefs =
+    # meta:
     commands:
+      #-----------------------------------------------------------------------------------------------------
+      'help':
+        runner: ( d ) =>
+          debug '^690-1^', process.argv
+          echo lime """Metteur: produce impositions for booklets with 4, 8 or 16 pages arranged on one sheet"""
+          echo blue """
+            Usage:
+              metteur impose [flags]
+                --input   -i
+                --output  -o
+            """
       #-----------------------------------------------------------------------------------------------------
       'impose':
         description:  "assemble pages from one PDF file into a new PDF, to be folded into a booklet"
         runner: ( d ) =>
-          debug '^345345^', process.argv
-          debug '^77665^', cfg = types.create.mtr_cli_impose_cfg d.verdict.parameters
-          ( require './main' ).demo()
+          cfg         = types.create.mtr_cli_impose_cfg d.verdict.parameters
+          cfg.input   = resolve cfg.input
+          cfg.output  = resolve cfg.output
+          whisper()
+          whisper "#{to_width "#{key}:", 20} #{value}" for key, value of cfg
+          whisper()
+          mtr = new Metteur()
+          mtr.impose cfg
+          await run_tex()
           return null
         flags:
           'input':
@@ -126,6 +97,10 @@ show_hosts = -> new Promise ( resolve, reject ) =>
             type:         String
             # positional:   true
             description:  "output file (containing the booklet with multiple pages per sheet, front and back)"
+      #-----------------------------------------------------------------------------------------------------
+      'tex':
+        description:  "run XeLaTeX on tex/booklet.tex to produce tex/booklet.pdf"
+        runner: run_tex
   #.........................................................................................................
   MIXA.run jobdefs, process.argv
   return null

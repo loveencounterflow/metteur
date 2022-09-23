@@ -37,6 +37,14 @@ types.declare.mtr_cli_impose_cfg
     input:      null
     output:     null
 
+#-----------------------------------------------------------------------------------------------------------
+types.declare.mtr_impose_cfg
+  $input:       'nonempty.text'
+  $output:      'nonempty.text'
+  default:
+    input:      null
+    output:     null
+
 
 #-----------------------------------------------------------------------------------------------------------
 types.declare.mtr_template_fill
