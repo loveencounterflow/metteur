@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+#-----------------------------------------------------------------------------------------------------------
+enodir() {
+  # path="$1"
+  # echo "no such directory: $path"
+  exit 1; }
+
+#-----------------------------------------------------------------------------------------------------------
+enocmd() {
+  name="$1"
+  echo "executable not found: $name"
+  exit 1; }
+
+#-----------------------------------------------------------------------------------------------------------
+realpath() {
+  # thx to https://github.com/whatwg/html-build/issues/90
+  OURPWD=$PWD
+  cd "$(dirname "$1")" || enodir
+  LINK=$(readlink "$(basename "$1")")
+  while [ "$LINK" ]; do
+    cd "$(dirname "$LINK")" || enodir
+    LINK=$(readlink "$(basename "$1")")
+  done
+  REALPATH="$PWD/$(basename "$1")"
+  cd "$OURPWD" || enodir
+  echo "$REALPATH"
+}
+# realpath "$@"
+
+# #-----------------------------------------------------------------------------------------------------------
+# cwd=$(pwd)
+# home="$(realpath "$(realpath "${BASH_SOURCE[0]}" | xargs dirname)"/..)"; cd "$home" || enodir
+
