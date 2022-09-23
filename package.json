@@ -10,8 +10,10 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "fs-extra": "^10.1.0",
     "guy": "^11.8.0",
     "intertype": "10.1.2",
-    "mixa": "^0.6.1"
+    "mixa": "^0.6.1",
+    "to-width": "^1.2.0"
   }
 }
