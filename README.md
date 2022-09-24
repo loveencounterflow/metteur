@@ -12,6 +12,7 @@
   - [16-page Booklet](#16-page-booklet)
   - [Discussion of Alternative Solutions](#discussion-of-alternative-solutions)
   - [Internals](#internals)
+  - [External Dependencies](#external-dependencies)
 - [To Do](#to-do)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -66,6 +67,31 @@
 * see [README for internals](./README-internals.md) like templating used to build the TeX source for the
   assembled booklet
 
+## External Dependencies
+
+* (Xe)LaTeX
+  * `sudo apt install texlive-xetex xelatex`
+  * the above should install all of
+    * `fonts-texgyre`
+    * `libptexenc1`
+    * `libtexlua53`
+    * `libtexluajit2`
+    * `preview-latex-style`
+    * `tex-common`
+    * `tex-gyre`
+    * `texlive-base`
+    * `texlive-binaries`
+    * `texlive-fonts-recommended`
+    * `texlive-latex-base`
+    * `texlive-latex-extra`
+    * `texlive-latex-recommended`
+    * `texlive-pictures`
+    * `texlive-plain-generic`
+    * `texlive-xetex`
+* [zx](https://github.com/google/zx):
+  * in turn, requires NodeJS >= 16.0.0
+  * `pnpm add -g zx`
+  * `npm i -g zx`
 
 # To Do
 
