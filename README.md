@@ -88,10 +88,11 @@
     * `texlive-pictures`
     * `texlive-plain-generic`
     * `texlive-xetex`
-* [zx](https://github.com/google/zx):
-  * in turn, requires NodeJS >= 16.0.0
-  * `pnpm add -g zx`
-  * `npm i -g zx`
+
+<del>* [zx](https://github.com/google/zx):</del>
+<del>  * in turn, requires NodeJS >= 16.0.0</del>
+<del>  * `pnpm add -g zx`</del>
+<del>  * `npm i -g zx`</del>
 
 # To Do
 
