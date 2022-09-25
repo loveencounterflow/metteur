@@ -10,7 +10,7 @@ GUY                       = require 'guy'
   whisper
   warn
   urge
-  help }                  = GUY.trm.get_loggers 'METTEUR'
+  help }                  = GUY.trm.get_loggers 'METTEUR/cli'
 { rpr
   echo }                  = GUY.trm
 #...........................................................................................................
@@ -34,22 +34,42 @@ resolve = ( P... ) ->
   return PATH.resolve PATH.join process.env.cwd, P...
 
 #-----------------------------------------------------------------------------------------------------------
-run_tex = ( d ) -> new Promise ( resolve, reject ) =>
-  cmd = PATH.resolve PATH.join __dirname, '../bin/run-tex'
-  debug '^3453^', cmd
-  debug '^3453^', "run #{cmd}"
-  cp = CP.spawn cmd, []
-  cp.stdout.setEncoding 'utf-8'
-  cp.stderr.setEncoding 'utf-8'
-  cp.stdout.on 'data', ( data ) -> help data
-  cp.stderr.on 'data', ( data ) -> urge data
-  # cp.on 'exit',  ( code, signal ) -> debug '^exit@3534^',  { code, signal, }; resolve()
-  cp.on 'close', ( code, signal ) -> debug '^close@3534^', { code, signal, }; resolve()
-  return null
+run_tex_etc = ( cfg ) ->
+  GUY.temp.with_directory { keep: false, }, ({ path }) ->
+    cfg.tex_working_path  = path
+    cfg.tex_target_path   = resolve cfg.tex_working_path, 'booklet.tex'
+    cfg.tex_pdf_path      = resolve cfg.tex_working_path, 'booklet.pdf'
+    FS.writeFileSync cfg.tex_target_path, cfg.imposition
+    help "wrote imposition to #{cfg.tex_target_path}"
+# write imposition
+    await _run_tex cfg
+    # move output to target
+    FS.moveSync cfg.tex_pdf_path, cfg.output, { overwrite: cfg.overwrite, }
+    return null
+  return cfg
 
 #-----------------------------------------------------------------------------------------------------------
-move_output_to_target = ( d ) ->
-  FS.moveSync
+_run_tex = ( cfg ) ->
+  await import( 'zx/globals' )
+  #---------------------------------------------------------------------------------------------------------
+  $$ = ( P... ) -> ( await $ P... ).stdout.trim()
+  path_from_executable_name = ( name ) ->
+    try return await $$"""command -v #{name}""" catch error
+      warn "^6456^", """
+        unable to locate #{name};
+        please refer to [section *External Dependencies*](https://github.com/loveencounterflow/metteur#external-dependencies) in the README.md"""
+      throw error
+  #---------------------------------------------------------------------------------------------------------
+  paths =
+    xelatex: await path_from_executable_name 'xelatex'
+  #---------------------------------------------------------------------------------------------------------
+  debug '^43345^', paths
+  cd cfg.tex_working_path
+  await $"""time #{paths.xelatex} --halt-on-error booklet.tex > xelatex-output"""
+  await $"""time #{paths.xelatex} --halt-on-error booklet.tex > xelatex-output"""
+  await $"""ls ."""
+  # debug '^43345^', cfg
+  return null
 
 
 #===========================================================================================================
@@ -68,22 +88,23 @@ move_output_to_target = ( d ) ->
           echo blue """
             Usage:
               metteur impose [flags]
-                --input   -i
-                --output  -o
+                --input       -i
+                --overwrite   -y
+                --output      -o
             """
       #-----------------------------------------------------------------------------------------------------
       'impose':
         description:  "assemble pages from one PDF file into a new PDF, to be folded into a booklet"
         runner: ( d ) =>
-          cfg         = types.create.mtr_cli_impose_cfg d.verdict.parameters
-          cfg.input   = resolve cfg.input
-          cfg.output  = resolve cfg.output
+          cfg             = types.create.mtr_cli_impose_cfg d.verdict.parameters
+          cfg.input       = resolve cfg.input
+          cfg.output      = resolve cfg.output
           whisper()
           whisper "#{to_width "#{key}:", 20} #{value}" for key, value of cfg
           whisper()
           mtr = new Metteur()
-          mtr.impose cfg
-          await run_tex()
+          cfg.imposition  = mtr.impose cfg
+          await run_tex_etc cfg
           return null
         flags:
           'input':
@@ -97,10 +118,15 @@ move_output_to_target = ( d ) ->
             type:         String
             # positional:   true
             description:  "output file (containing the booklet with multiple pages per sheet, front and back)"
+          'overwrite':
+            alias:        'y'
+            type:         Boolean
+            # positional:   true
+            description:  "whether to overwrite output file"
       #-----------------------------------------------------------------------------------------------------
-      'tex':
-        description:  "run XeLaTeX on tex/booklet.tex to produce tex/booklet.pdf"
-        runner: run_tex
+      # 'tex':
+      #   description:  "run XeLaTeX on tex/booklet.tex to produce tex/booklet.pdf"
+        # runner: run_tex
   #.........................................................................................................
   MIXA.run jobdefs, process.argv
   return null
@@ -111,3 +137,5 @@ move_output_to_target = ( d ) ->
 if module is require.main then do =>
   # await demo_receiver()
   await @cli()
+
+

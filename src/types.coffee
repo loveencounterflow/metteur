@@ -33,17 +33,21 @@ types.declare.mtr_new_template
 types.declare.mtr_cli_impose_cfg
   $input:       'nonempty.text'
   $output:      'nonempty.text'
+  $overwrite:   'boolean'
   default:
     input:      null
     output:     null
+    overwrite:  false
 
 #-----------------------------------------------------------------------------------------------------------
 types.declare.mtr_impose_cfg
   $input:       'nonempty.text'
   $output:      'nonempty.text'
+  $overwrite:   'boolean'
   default:
     input:      null
     output:     null
+    overwrite:  false
 
 
 #-----------------------------------------------------------------------------------------------------------

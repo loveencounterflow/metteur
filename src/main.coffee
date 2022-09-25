@@ -25,7 +25,7 @@ misfit                    = Symbol 'misfit'
 { freeze }                = GUY.lft
 # { equals }                = types
 # { HDML }                  = require 'hdml'
-page_template             = """
+page_tpl                  = """
   \\begin{tikzpicture}[overlay,remember picture]%
   \\node[anchor=north west,xshift=❰xshift❱mm,yshift=❰yshift❱mm] at (current page.north west){%
     \\fbox{\\includegraphics[width=❰width❱mm,height=❰height❱mm,angle=❰angle❱,page=❰page_nr❱]{❰source_path❱}}};%
@@ -136,12 +136,11 @@ class Metteur extends GUY.props.Strict_owner
   #---------------------------------------------------------------------------------------------------------
   impose: ( cfg ) ->
     cfg             = types.create.mtr_impose_cfg cfg
-    template_path   = resolve 'tex/booklet.template.tex'
-    tex_target_path = resolve 'tex/booklet.tex'
-    doc_template    = FS.readFileSync template_path, { encoding: 'utf-8', }
+    doc_tpl_path    = resolve 'tex/booklet.template.tex'
+    doc_tpl         = FS.readFileSync doc_tpl_path, { encoding: 'utf-8', }
     format          = ( x ) -> if isa.text x then x else rpr x
-    doc_tpl         = new Template { template: doc_template,  open: '❰', close: '❱', format, }
-    page_tpl        = new Template { template: page_template, open: '❰', close: '❱', format, }
+    doc_tpl         = new Template { template: doc_tpl,  open: '❰', close: '❱', format, }
+    page_tpl        = new Template { template:      page_tpl, open: '❰', close: '❱', format, }
     #.......................................................................................................
     Q               = new GUY.props.Strict_owner seal: true, target:
       # frame_weight:     '0.25mm'
@@ -186,10 +185,8 @@ class Metteur extends GUY.props.Strict_owner
           doc_tpl.fill_some { content: page_tpl.finish(), }
     doc_tpl.fill_some { frame_weight: Q.frame_weight, }
     # template = @interpolate template, Q
-    FS.writeFileSync tex_target_path, doc_tpl.finish()
-    help "wrote output to #{tex_target_path}"
     #.......................................................................................................
-    return null
+    return doc_tpl.finish()
 
 
 #-----------------------------------------------------------------------------------------------------------
