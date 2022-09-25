@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "",
+  "sourceRoot": "",
+  "sources": [
+    "../src/_run-tex.zx.coffee"
+  ],
+  "names": [],
+  "mappings": "AAAiB;EAAA;EAEjB;AAFiB,MAAA,GAAA,EAAA,KAAA,EAAA,IAAA,EAAA,IAAA,EAAA,IAAA,EAAA,GAAA,EAAA,IAAA,EAAA,IAAA,EAAA,OAAA;;;EAMjB,GAAA,GAA4B,OAAA,CAAQ,KAAR;;EAC5B,CAAA,CAAE,KAAF,EACE,IADF,EAEE,OAFF,EAGE,IAHF,EAIE,IAJF,EAKE,IALF,CAAA,GAK4B,GAAG,CAAC,GAAG,CAAC,WAAR,CAAoB,iBAApB,CAL5B;;EAMA,CAAA,CAAE,GAAF,EACE,IADF,CAAA,GAC4B,GAAG,CAAC,GADhC;;EAIA,IAAA,CAAK,WAAL,EAAkB,UAAlB;;EACA,CAAC,CAAA,IAAA;AAlBgB",
+  "sourcesContent": [
+    "#!/usr/bin/env zx\n\n'use strict'\n\n\n############################################################################################################\nGUY                       = require 'guy'\n{ debug\n  info\n  whisper\n  warn\n  urge\n  help }                  = GUY.trm.get_loggers 'METTEUR/run-tex'\n{ rpr\n  echo }                  = GUY.trm\n\n\ninfo \"helo from\", __filename\n$\"ls .\"\n\n\n"
+  ]
+}
