@@ -40,11 +40,10 @@ run_tex_etc = ( cfg ) ->
     cfg.tex_target_path   = resolve cfg.tex_working_path, 'booklet.tex'
     cfg.tex_pdf_path      = resolve cfg.tex_working_path, 'booklet.pdf'
     FS.writeFileSync cfg.tex_target_path, cfg.imposition
-    help "wrote imposition to #{cfg.tex_target_path}"
-# write imposition
+    whisper "wrote imposition to #{cfg.tex_target_path}"
     await _run_tex cfg
-    # move output to target
     FS.moveSync cfg.tex_pdf_path, cfg.output, { overwrite: cfg.overwrite, }
+    help "wrote output to #{cfg.output}"
     return null
   return cfg
 
@@ -67,7 +66,6 @@ _run_tex = ( cfg ) ->
   cd cfg.tex_working_path
   await $"""time #{paths.xelatex} --halt-on-error booklet.tex > xelatex-output"""
   await $"""time #{paths.xelatex} --halt-on-error booklet.tex > xelatex-output"""
-  await $"""ls ."""
   # debug '^43345^', cfg
   return null
 
