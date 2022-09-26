@@ -13,7 +13,8 @@
   - [Discussion of Alternative Solutions](#discussion-of-alternative-solutions)
   - [Internals](#internals)
   - [External Dependencies](#external-dependencies)
-- [To Do](#to-do)
+  - [To Do](#to-do)
+  - [Is Done](#is-done)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -40,6 +41,23 @@
   mean Leaf sensu stricto.</dd>
 
   </dl>
+
+from [*Wikipedia: Bookbinding*](https://en.wikipedia.org/wiki/Bookbinding#Terms_and_techniques):
+
+* A bifolium (often wrongly called a "bifolio", "bi-folio", or even "bifold") is a single sheet folded in
+  half to make two leaves. The plural is "bifolia", not "bifoliums".
+* A section, sometimes called a gathering, or, especially if unprinted, a quire, is a group of bifolia
+  nested together as a single unit. In a completed book, each quire is sewn through its fold. Depending on
+  how many bifolia a quire is made of, it could be called:
+  * duernion – two bifolia, producing four leaves;
+  * ternion – three bifolia, producing six leaves;
+  * quaternion – four bifolia, producing eight leaves;
+  * quinternion – five bifolia, producing ten leaves;
+  * sextern or sexternion – six bifolia, producing twelve leaves.
+
+* In bookbinding, a section, gathering, or signature is a group of sheets folded in half, to be worked into
+  the binding as a unit.—[*Wikipedia: Section
+  (bookbinding)*](https://en.wikipedia.org/wiki/Section_(bookbinding))
 
 ## 16-page Booklet
 
@@ -94,7 +112,28 @@
 <del>  * `pnpm add -g zx`</del>
 <del>  * `npm i -g zx`</del>
 
-# To Do
+## To Do
 
-* **[–]** implement `--help` option for CLI
+* **[–]** implement support for booklets with pagecounts not divisible by the selected pages per sheet (PPS)
+  number
+* **[–]** allow to 'split' source PDFs at (positive) page № or (negative) page count as in `split=12`,
+  `split=-1`; pages before the split will be mapped onto their positions from booklet front end, pages after
+  the split to their positions from booklet back end. Anticipated most frequent use is adding `split=-1` to
+  insert empty pages near the end of the booklet but keep the last page of the source PDF as last page of
+  the booklet.
+* **[–]** allow to specify layout in terms of
+  * **[–]** pages per sheet (unit `pps`, the default) or half that number, 'n-up' as in `8up` (meaning the
+    same as `16pps` or simply `16`)
+  * **[–]** folding method. See [*Glisterings*](https://tug.org/TUGboat/tb31-3/tb99glister.pdf) and
+    [*Printing booklets with
+    LaTeX*](https://ctan.mc1.root.project-creative.net/macros/latex/contrib/booklet/booklet.pdf) for different
+  * **[–]** row and column counts (see `nup` argument in [*Creating Pocket-sized Books Using
+    LATEX*](https://tug.org/pracjourn/2006-3/venugopal-pocketbook/venugopal-pocketbook.pdf))
+* **[–]** support signatures so that several sheets can be bound into a quire (section)
+* **[–]** implement G. *Bundzuwachs*, the amount of whitespace to be added to the gutter to account for fold
+  thickness; see [*Booklets erzeugen*](https://tobiw.de/tbdm/booklets-erzeugen)
 
+
+## Is Done
+
+* **[+]** implement `--help` option for CLI
