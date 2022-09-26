@@ -34,20 +34,24 @@ types.declare.mtr_cli_impose_cfg
   $input:       'nonempty.text'
   $output:      'nonempty.text'
   $overwrite:   'boolean'
+  $split:       'integer'
   default:
     input:      null
     output:     null
     overwrite:  false
+    split:      0
 
 #-----------------------------------------------------------------------------------------------------------
 types.declare.mtr_impose_cfg
   $input:       'nonempty.text'
   $output:      'nonempty.text'
   $overwrite:   'boolean'
+  $split:       'integer'
   default:
     input:      null
     output:     null
     overwrite:  false
+    split:      0
 
 
 #-----------------------------------------------------------------------------------------------------------
