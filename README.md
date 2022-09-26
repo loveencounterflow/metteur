@@ -88,7 +88,7 @@ from [*Wikipedia: Bookbinding*](https://en.wikipedia.org/wiki/Bookbinding#Terms_
 ## External Dependencies
 
 * (Xe)LaTeX
-  * `sudo apt install texlive-xetex xelatex`
+  * `sudo apt install -y texlive-xetex xelatex`
   * the above should install all of
     * `fonts-texgyre`
     * `libptexenc1`
@@ -106,6 +106,8 @@ from [*Wikipedia: Bookbinding*](https://en.wikipedia.org/wiki/Bookbinding#Terms_
     * `texlive-pictures`
     * `texlive-plain-generic`
     * `texlive-xetex`
+* `pdfinfo`
+  * `sudo apt install -y poppler-utils`
 
 <del>* [zx](https://github.com/google/zx):</del>
 <del>  * in turn, requires NodeJS >= 16.0.0</del>
@@ -132,6 +134,9 @@ from [*Wikipedia: Bookbinding*](https://en.wikipedia.org/wiki/Bookbinding#Terms_
 * **[–]** support signatures so that several sheets can be bound into a quire (section)
 * **[–]** implement G. *Bundzuwachs*, the amount of whitespace to be added to the gutter to account for fold
   thickness; see [*Booklets erzeugen*](https://tobiw.de/tbdm/booklets-erzeugen)
+* **[–]** implement `--pages` CLI argument to select which pages whould be taken from source in which order;
+  can use both positive numbers for 1-based page №s and negative numbers for pages counted from back as well
+  as ranges (use `..` for those to avoid conflict with minus sign)
 
 
 ## Is Done
