@@ -145,7 +145,6 @@ class Metteur extends GUY.props.Strict_owner
     Q               = new GUY.props.Strict_owner seal: true, target:
       # frame_weight:     '0.25mm'
       frame_weight:     '0mm'
-      pps:              16 ### TAINT compute from layout, user cfg ###
       xshift:           Template.misfit
       yshift:           Template.misfit
       angle:            Template.misfit
