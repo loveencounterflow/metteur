@@ -3,7 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   fs-extra: ^10.1.0
   guy: 11.10.0
-  intertype: 10.1.4
+  intertype: 0.101.5
   mixa: ^0.6.1
   temp: ^0.9.4
   to-width: ^1.2.0
@@ -12,7 +12,7 @@ specifiers:
 dependencies:
   fs-extra: 10.1.0
   guy: 11.10.0
-  intertype: 10.1.4
+  intertype: 0.101.5
   mixa: 0.6.1
   temp: 0.9.4
   to-width: 1.2.0
@@ -316,8 +316,8 @@ packages:
       multimix: 5.0.0
     dev: false
 
-  /intertype/10.1.4:
-    resolution: {integrity: sha512-X7DftTdWhfDQzJsTi3kDcHCqenMyGpNjZp2+kIf5t4nfNqj3NzaKMGLudT7TeDaqRxhXmlVok6b5Z/3I3OxuWg==}
+  /intertype/0.101.5:
+    resolution: {integrity: sha512-LHt5uoKrrOtkyds7Bq+adEhsIWKxWF8w4hEhXzt3Acr2e/qrXsSG79fBqGVN3wTBcIyYOEw1yfxmSXk00clCpg==}
     dependencies:
       guy: 11.6.0
       intertype-legacy: 7.7.1
