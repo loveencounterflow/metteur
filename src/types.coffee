@@ -30,16 +30,32 @@ types.declare.mtr_new_template
     format:       id = ( value, key ) -> value
 
 #-----------------------------------------------------------------------------------------------------------
-types.declare.mtr_cli_impose_cfg
-  $input:       'nonempty.text'
-  $output:      'nonempty.text'
-  $overwrite:   'boolean'
-  $split:       'integer'
-  default:
-    input:      null
-    output:     null
-    overwrite:  false
-    split:      0
+types.declare.mtr_template_fill
+  isa: ( x ) ->
+    return true
+  default: null
+
+#-----------------------------------------------------------------------------------------------------------
+types.declare.mtr_orientation ( x ) -> x in [ 'ltr', 'rtl', ]
+
+#-----------------------------------------------------------------------------------------------------------
+types.declare.mtr_layouts ( x ) ->
+  return false unless @isa.object x
+  for key, value of x
+    return false unless @isa.nonempty.text key
+    return false unless @isa.mtr_layout value
+  return true
+
+#-----------------------------------------------------------------------------------------------------------
+types.declare.mtr_layout
+  $name:        'nonempty.text'
+  $recto:       'optional.mtr_sheet_side_layout'
+  $verso:       'optional.mtr_sheet_side_layout'
+
+#-----------------------------------------------------------------------------------------------------------
+types.declare.mtr_sheet_side_layout
+  $left:        'list.of.positive1.integer'
+  $right:       'list.of.positive1.integer'
 
 #-----------------------------------------------------------------------------------------------------------
 types.declare.mtr_impose_cfg
@@ -47,15 +63,43 @@ types.declare.mtr_impose_cfg
   $output:      'nonempty.text'
   $overwrite:   'boolean'
   $split:       'integer'
+  $orientation: 'mtr_orientation'
+  $layout:      'mtr_layout'
+  $layouts:     'mtr_layouts'
   default:
-    input:      null
-    output:     null
-    overwrite:  false
-    split:      0
-
+    input:        null
+    output:       null
+    overwrite:    false
+    split:        0
+    orientation:  'ltr' # or 'rtl' which will invert the orientation of all pages, allowing for CJK, Arabic RTL books
+    layout:
+      name:       'pps16'
+    layouts:
+      pps16:
+        name:     'pps16'
+        recto:
+          left:   [  4, 13, 16,  1, ]
+          right:  [  5, 12,  9,  8, ]
+        verso:
+          left:   [  6, 11, 10,  7, ]
+          right:  [  3, 14, 15,  2, ]
+  create: ( cfg ) ->
+    R = { @registry.mtr_impose_cfg.default..., cfg..., }
+    unless R.recto? and R.verso?
+      unless ( layout = R.layouts[ R.layout.name ] )?
+        throw new Error "^metteur/types@23^ unknown layout name #{rpr R.layout.name}"
+      R.layout = { layout..., R.layout..., }
+    return R
 
 #-----------------------------------------------------------------------------------------------------------
-types.declare.mtr_template_fill
-  isa: ( x ) ->
-    return true
-  default: null
+# types.declare.mtr_cli_impose_cfg 'mtr_impose_cfg'
+  # $input:       'nonempty.text'
+  # $output:      'nonempty.text'
+  # $overwrite:   'boolean'
+  # $split:       'integer'
+  # default:
+  #   input:      null
+  #   output:     null
+  #   overwrite:  false
+  #   split:      0
+

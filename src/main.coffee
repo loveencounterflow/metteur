@@ -31,14 +31,6 @@ page_tpl                  = """
     \\fbox{\\includegraphics[width=❰width❱mm,height=❰height❱mm,angle=❰angle❱,page=❰page_nr❱]{❰source_path❱}}};%
     \\end{tikzpicture}% ❰side❱ ❰column❱ r❰page_idx1❱ p❰page_nr❱\n"""#.replace /\s*\n\s*/g, ''
 
-layout =
-  orientation: 'ltr' # or 'rtl' which will invert the orientation of all pages, allowing for CJK, Arabic RTL books
-  recto:
-    left:   [  4, 13, 16,  1, ]
-    right:  [  5, 12,  9,  8, ]
-  verso:
-    left:   [  6, 11, 10,  7, ]
-    right:  [  3, 14, 15,  2, ]
 
 
 #===========================================================================================================
@@ -162,10 +154,10 @@ class Metteur extends GUY.props.Strict_owner
     ### TAINT precompute using named values ###
     Q.width         = 297 / 4
     Q.height        = 210 / 2
-    Q.orientation   = if layout.orientation is 'ltr' then +1 else -1
+    Q.orientation   = if cfg.orientation is 'ltr' then +1 else -1
     for _side in [ 'recto', 'verso', ]
       Q.side  = _side
-      sheet   = layout[ Q.side ]
+      sheet   = cfg.layout[ Q.side ]
       doc_tpl.fill_some { content: '\\newpage%\n', } if Q.side is 'verso'
       for _column in [ 'left', 'right', ]
         Q.column = _column

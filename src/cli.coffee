@@ -90,8 +90,6 @@ fetch_pagecount = ( cfg ) ->
 
 #-----------------------------------------------------------------------------------------------------------
 get_pagedistro = ( cfg ) ->
-  ### TAINT compute from layout, user cfg ###
-  cfg.pps = 16 ### pages per sheet ###
   if ( cfg.pagecount %% cfg.pps ) is 0
     return ( lpnr for lpnr in [ 1 .. cfg.pagecount ] )
   # if cfg.p
@@ -123,14 +121,17 @@ get_pagedistro = ( cfg ) ->
       'impose':
         description:  "assemble pages from one PDF file into a new PDF, to be folded into a booklet"
         runner: ( d ) =>
-          cfg             = types.create.mtr_cli_impose_cfg d.verdict.parameters
+          # cfg             = types.create.mtr_cli_impose_cfg d.verdict.parameters
+          debug '^23423^', d.verdict.parameters
+          cfg             = types.create.mtr_impose_cfg d.verdict.parameters
           cfg.input       = resolve cfg.input
           cfg.output      = resolve cfg.output
           cfg.pagecount   = await fetch_pagecount cfg
+          ### TAINT compute from layout, user cfg ###
+          cfg.pps         = 16 ### pages per sheet ###
           cfg.pagedistro  = get_pagedistro cfg
           show_cfg cfg
-          process.exit 111
-          mtr = new Metteur()
+          mtr             = new Metteur()
           cfg.imposition  = mtr.impose cfg
           await run_tex_etc cfg
           return null
