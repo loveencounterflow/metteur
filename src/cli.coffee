@@ -89,10 +89,22 @@ fetch_pagecount = ( cfg ) ->
   return R
 
 #-----------------------------------------------------------------------------------------------------------
-get_pagedistro = ( cfg ) ->
-  if ( cfg.pagecount %% cfg.pps ) is 0
+fetch_pagedistro = ( cfg ) ->
+  cfg.pagecount       = await fetch_pagecount cfg
+  unless -cfg.pagecount <= cfg.split <= +cfg.pagecount
+    throw new Error "^metteur/cli@33^ value for `split` (#{cfg.split}) exceeds pagecount (#{cfg.pagecount})"
+  cfg.split_abs       = cfg.pagecount + cfg.split + 1 if cfg.split < 0
+  cfg.blank_pagecount = cfg.pps %% cfg.pagecount
+  if cfg.blank_pagecount is 0
+    ### NOTE lpnr: Left-anchored Page NumbeR;
+      rpnr would be negative and count from right end, sp -1 is last page ###
     return ( lpnr for lpnr in [ 1 .. cfg.pagecount ] )
-  # if cfg.p
+  ### TAINT only valid for single signature ###
+  cfg.pagedistro = [  ( lpnr for lpnr in [ 1              ... cfg.split_abs ]       )..., \
+                      ( 0    for lpnr in [ 1              ..  cfg.blank_pagecount ] )..., \
+                      ( lpnr for lpnr in [ cfg.split_abs  ..  cfg.pagecount ]       )..., ]
+  debug '^3253^', cfg.blank_pagecount
+  debug '^3253^', cfg.pagedistro
   return null
 
 
@@ -122,14 +134,13 @@ get_pagedistro = ( cfg ) ->
         description:  "assemble pages from one PDF file into a new PDF, to be folded into a booklet"
         runner: ( d ) =>
           # cfg             = types.create.mtr_cli_impose_cfg d.verdict.parameters
-          debug '^23423^', d.verdict.parameters
           cfg             = types.create.mtr_impose_cfg d.verdict.parameters
           cfg.input       = resolve cfg.input
           cfg.output      = resolve cfg.output
-          cfg.pagecount   = await fetch_pagecount cfg
           ### TAINT compute from layout, user cfg ###
           cfg.pps         = 16 ### pages per sheet ###
-          cfg.pagedistro  = get_pagedistro cfg
+          cfg.pagedistro  = await fetch_pagedistro cfg
+          debug '^3553^', { pagedistro: cfg.pagedistro, }
           show_cfg cfg
           mtr             = new Metteur()
           cfg.imposition  = mtr.impose cfg
