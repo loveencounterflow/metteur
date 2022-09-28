@@ -9,6 +9,7 @@
 
 - [Metteur](#metteur)
   - [Terminology](#terminology)
+  - [Configuration](#configuration)
   - [16-page Booklet](#16-page-booklet)
   - [Discussion of Alternative Solutions](#discussion-of-alternative-solutions)
   - [Internals](#internals)
@@ -58,6 +59,28 @@ from [*Wikipedia: Bookbinding*](https://en.wikipedia.org/wiki/Bookbinding#Terms_
 * In bookbinding, a section, gathering, or signature is a group of sheets folded in half, to be worked into
   the binding as a unit.—[*Wikipedia: Section
   (bookbinding)*](https://en.wikipedia.org/wiki/Section_(bookbinding))
+
+## Configuration
+
+* `sheet`: the paper to be printed on
+  * `size`: sheet size fixed (for now) at `'a4'` equalling `'210mm x 297mm'`
+  * `duplex`: duplex mode, fixed (for now) at `'long-edge'` (alternative `'short-edge'`)
+  * `folds`: how to fold; fixed (for now) at `'hb,vb,hb'`
+  * `cuts`: how to cut; not supported but see
+    [*Glisterings*](https://tug.org/TUGboat/tb31-3/tb99glister.pdf) for examples
+
+<!--
+layout =
+  orientation: 'ltr' # or 'rtl' which will invert the orientation of all pages, allowing for CJK, Arabic RTL books
+  recto:
+    left:   [  4, 13, 16,  1, ]
+    right:  [  5, 12,  9,  8, ]
+  verso:
+    left:   [  6, 11, 10,  7, ]
+    right:  [  3, 14, 15,  2, ]
+
+ -->
+
 
 ## 16-page Booklet
 
