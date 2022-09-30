@@ -11,6 +11,8 @@ GUY                       = require 'guy'
   warn
   urge
   help }                  = GUY.trm.get_loggers 'METTEUR/types'
+{ rpr
+  echo }                  = GUY.trm
 module.exports            = types = new ( require 'intertype' ).Intertype()
 
 #-----------------------------------------------------------------------------------------------------------
@@ -53,12 +55,11 @@ types.declare.mtr_layout
   $verso:       'optional.mtr_sheet_side_layout'
 
 #-----------------------------------------------------------------------------------------------------------
-types.declare.mtr_sheet_side_layout
+types.declare.mtr_sheet_side_layout ( x ) -> true
 
 #-----------------------------------------------------------------------------------------------------------
-types.declare.mtr_split list_of_page_nrs = ( x ) ->
+types.declare.mtr_split ( x ) ->
   return false unless @isa.nonempty.text x
-  data  = ( @state.data ?= {} ).mtr_split = {}
   parts = ( part.trim() for part in x.split ',' )
   pnrs  = []
   for part, idx in parts
@@ -67,12 +68,12 @@ types.declare.mtr_split list_of_page_nrs = ( x ) ->
       when 1 then [ pnr, count, ] = [ part, '-1', ]
       when 2 then [ pnr, count, ] = pair
       when 3 then return false ### TAINT can we give reason for rejection? ###
-    return false if Number.isNaN pnr    = parseInt pnr    ### TAINT use @isa.nan when available ###
-    return false if Number.isNaN count  = parseInt count  ### TAINT use @isa.nan when available ###
-    debug '^45-1^', { pnr, count, }
+    return false if @isa.nan pnr    = parseInt pnr    ### TAINT use @isa.nan when available ###
+    return false if @isa.nan count  = parseInt count  ### TAINT use @isa.nan when available ###
+    # debug '^45-1^', { pnr, count, }
+    count = +Infinity if count < 0
     pnrs.push { pnr, count, }
-  # pnrs = (  )
-  data.pnrs = pnrs
+  @data.mtr_split = pnrs
   return true
 
 #-----------------------------------------------------------------------------------------------------------
@@ -80,7 +81,7 @@ types.declare.mtr_impose_cfg
   $input:       'nonempty.text'
   $output:      'nonempty.text'
   $overwrite:   'boolean'
-  $split:       'integer'
+  $split:       'mtr_split'
   $orientation: 'mtr_orientation'
   $layout:      'mtr_layout'
   $layouts:     'mtr_layouts'
@@ -88,7 +89,7 @@ types.declare.mtr_impose_cfg
     input:        null
     output:       null
     overwrite:    false
-    split:        0
+    split:        '-0'
     orientation:  'ltr' # or 'rtl' which will invert the orientation of all pages, allowing for CJK, Arabic RTL books
     layout:
       name:       'pps16'

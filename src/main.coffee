@@ -127,8 +127,10 @@ class Metteur extends GUY.props.Strict_owner
     return undefined
 
   #---------------------------------------------------------------------------------------------------------
-  impose: ( cfg ) ->
-    cfg             = types.create.mtr_impose_cfg cfg
+  impose: ( cfg ) -> @_impose types.create.mtr_impose_cfg cfg
+
+  #---------------------------------------------------------------------------------------------------------
+  _impose: ( cfg ) ->
     doc_tpl_path    = resolve 'tex/booklet.template.tex'
     doc_tpl         = FS.readFileSync doc_tpl_path, { encoding: 'utf-8', }
     format          = ( x ) -> if isa.text x then x else rpr x

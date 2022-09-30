@@ -27,6 +27,7 @@ GUY                       = require 'guy'
   grey }                  = GUY.trm
 { Metteur }               = require './main'
 { to_width }              = require 'to-width'
+deep_copy                 = ( require 'rfdc' ) { proto: true, circles: false, }
 $$                        = ( P... ) -> ( await $ P... ).stdout.trim()
 
 #-----------------------------------------------------------------------------------------------------------
@@ -91,21 +92,41 @@ fetch_pagecount = ( cfg ) ->
 #-----------------------------------------------------------------------------------------------------------
 fetch_pagedistro = ( cfg ) ->
   cfg.pagecount       = await fetch_pagecount cfg
-  unless -cfg.pagecount <= cfg.split <= +cfg.pagecount
-    throw new Error "^metteur/cli@33^ value for `split` (#{cfg.split}) exceeds pagecount (#{cfg.pagecount})"
-  cfg.split_abs       = cfg.pagecount + cfg.split + 1 if cfg.split < 0
-  cfg.blank_pagecount = cfg.pps %% cfg.pagecount
-  if cfg.blank_pagecount is 0
-    ### NOTE lpnr: Left-anchored Page NumbeR;
-      rpnr would be negative and count from right end, sp -1 is last page ###
-    return ( lpnr for lpnr in [ 1 .. cfg.pagecount ] )
-  ### TAINT only valid for single signature ###
-  cfg.pagedistro = [  ( lpnr for lpnr in [ 1              ... cfg.split_abs ]       )..., \
-                      ( 0    for lpnr in [ 1              ..  cfg.blank_pagecount ] )..., \
-                      ( lpnr for lpnr in [ cfg.split_abs  ..  cfg.pagecount ]       )..., ]
-  debug '^3253^', cfg.blank_pagecount
-  debug '^3253^', cfg.pagedistro
-  return null
+  cfg.sheetcount      = cfg.pagecount // cfg.pps
+  remainder           = cfg.pagecount %% cfg.pps
+  cfg.sheetcount++ if remainder isnt 0
+  cfg.blank_pagecount = cfg.pps - remainder
+  R                   = [ 1 .. cfg.pagecount ]
+  return R if cfg.blank_pagecount is 0
+  split               = deep_copy cfg.mtr_split
+  #.........................................................................................................
+  ### turn RPNRs into LPNRs ###
+  ### TAINT correct or complain about PNRs outside the allowed range ###
+  for d in split
+    if isa.negative d.pnr
+      d.pnr = cfg.pagecount + d.pnr
+  #.........................................................................................................
+  inserts = {}
+  bpc     = cfg.blank_pagecount
+  loop
+    break if bpc < 0
+    for d in split
+      continue if d.count <= 0
+      bpc--
+      break if bpc < 0
+      d.count--
+      inserts[ d.pnr ] = ( inserts[ d.pnr ] ?= 0 ) + 1
+  #.........................................................................................................
+  R = ( [ pnr, ] for pnr in R )
+  for pnr_txt, count of inserts
+    pnr = parseInt pnr_txt, 10
+    idx = pnr - 1
+    # ### thx to https://2ality.com/2018/12/creating-arrays.html#creating-ranges-of-integer-values ###
+    # R[ idx ].push Array.from { length, }, ( _, i ) -> 0
+    R[ idx ].push 0 for _ in [ 1 .. count ]
+  R = R.flat()
+  #.........................................................................................................
+  return R
 
 
 #===========================================================================================================
@@ -133,8 +154,9 @@ fetch_pagedistro = ( cfg ) ->
       'impose':
         description:  "assemble pages from one PDF file into a new PDF, to be folded into a booklet"
         runner: ( d ) =>
-          # cfg             = types.create.mtr_cli_impose_cfg d.verdict.parameters
           cfg             = types.create.mtr_impose_cfg d.verdict.parameters
+          ### TAINT inconsistent naming ###
+          cfg.mtr_split   = types.data.mtr_split
           cfg.input       = resolve cfg.input
           cfg.output      = resolve cfg.output
           ### TAINT compute from layout, user cfg ###
@@ -142,8 +164,9 @@ fetch_pagedistro = ( cfg ) ->
           cfg.pagedistro  = await fetch_pagedistro cfg
           debug '^3553^', { pagedistro: cfg.pagedistro, }
           show_cfg cfg
+          process.exit 111
           mtr             = new Metteur()
-          cfg.imposition  = mtr.impose cfg
+          cfg.imposition  = mtr._impose cfg
           await run_tex_etc cfg
           return null
         flags:
@@ -165,7 +188,7 @@ fetch_pagedistro = ( cfg ) ->
             description:  "whether to overwrite output file"
           'split':
             # alias:        'y'
-            type:         Number
+            type:         String
             # positional:   true
             description:  "use positive page nr or negative count to control insertion of empty pages"
       #-----------------------------------------------------------------------------------------------------
