@@ -10,6 +10,7 @@
 - [Metteur](#metteur)
   - [Terminology](#terminology)
   - [Configuration](#configuration)
+    - [Configuration: `split`](#configuration-split)
   - [16-page Booklet](#16-page-booklet)
   - [Discussion of Alternative Solutions](#discussion-of-alternative-solutions)
   - [Internals](#internals)
@@ -69,7 +70,8 @@ from [*Wikipedia: Bookbinding*](https://en.wikipedia.org/wiki/Bookbinding#Terms_
   * `cuts`: how to cut; not supported but see
     [*Glisterings*](https://tug.org/TUGboat/tb31-3/tb99glister.pdf) for examples
   * `split`: where to insert blank pages. A list of left-starting (positive) page numbers (LPNRs) and
-    right-starting (negative) page numbers (RPNRs), optionally with maximum number of pages to be inserted
+    right-starting (negative) page numbers (RPNRs), optionally with number of pages to be inserted.
+
 
 <!--
 layout =
@@ -82,6 +84,38 @@ layout =
     right:  [  3, 14, 15,  2, ]
 
  -->
+
+### Configuration: `split`
+
+The `split` paramter allows one to insert blank pages when the source has a pagecount that is not an integer
+multiple of the signature page count. So for example, when there is a source with 14 pages but one wants to
+produce a booklet of 16 pages, two blank pages have to be inserted, either one page at two locations each or
+two pages at one location. It will often be customary to insert a blank page after the title page and on
+right before the last page; the command for this would look like `metteur split='1,-1' ...`.
+
+`split` accepts a comma-separated list of left- and right-anchored numbers, which are expressed as positive
+and negative numbers, respectively. So to identify page 7 in an 8-page booklet, one can either use `7` (or
+`+7`) when counting from the front, and `-2` when counting from the back. Counting from the back is
+sometimes preferred because e.g. `-1` always identifies the last page of a book, irrespective of its page
+count.
+
+The below schematic shows, in the top half, how pages are numbered in a booklet with 8 pages: `[ p+1 ]`
+thru `[ p+8 ]` when counting from the left, and `[ p-1 ]` thru `[ p-8 ]` when counting from the right.
+Inserting pages can take only place before or after a page; to identify these spots, we introduce a 'split
+number' that refers to those places as `( s+0 )` for the frontmost and `( s+8 )` for the very last
+positions. Counting from the back, we have `( s-0 )` for the last and `( s-8 )` for the first position with
+the effect that, when using left-anchored numbers, the split position `+n` comes right *after* (to the
+right) page `+n`, but when counting from the right, split position `-n` comes right *before* (to the left)
+of page `-n`:
+
+
+```
+      [ p+1 ]    [ p+2 ]    [ p+3 ]    [ p+4 ]    [ p+5 ]    [ p+6 ]    [ p+7 ]    [ p+8 ]
+      [ p-8 ]    [ p-7 ]    [ p-6 ]    [ p-5 ]    [ p-4 ]    [ p-3 ]    [ p-2 ]    [ p-1 ]
+   ╱╲         ╱╲         ╱╲         ╱╲         ╱╲         ╱╲         ╱╲         ╱╲         ╱╲
+ ( s+0 )    ( s+1 )    ( s+2 )    ( s+3 )    ( s+4 )    ( s+5 )    ( s+6 )    ( s+7 )    ( s+8 )
+ ( s-8 )    ( s-7 )    ( s-6 )    ( s-5 )    ( s-4 )    ( s-3 )    ( s-2 )    ( s-1 )    ( s-0 )
+```
 
 
 ## 16-page Booklet
