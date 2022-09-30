@@ -54,8 +54,26 @@ types.declare.mtr_layout
 
 #-----------------------------------------------------------------------------------------------------------
 types.declare.mtr_sheet_side_layout
-  $left:        'list.of.positive1.integer'
-  $right:       'list.of.positive1.integer'
+
+#-----------------------------------------------------------------------------------------------------------
+types.declare.mtr_split list_of_page_nrs = ( x ) ->
+  return false unless @isa.nonempty.text x
+  data  = ( @state.data ?= {} ).mtr_split = {}
+  parts = ( part.trim() for part in x.split ',' )
+  pnrs  = []
+  for part, idx in parts
+    pair = part.split ':'
+    switch pair.length
+      when 1 then [ pnr, count, ] = [ part, '-1', ]
+      when 2 then [ pnr, count, ] = pair
+      when 3 then return false ### TAINT can we give reason for rejection? ###
+    return false if Number.isNaN pnr    = parseInt pnr    ### TAINT use @isa.nan when available ###
+    return false if Number.isNaN count  = parseInt count  ### TAINT use @isa.nan when available ###
+    debug '^45-1^', { pnr, count, }
+    pnrs.push { pnr, count, }
+  # pnrs = (  )
+  data.pnrs = pnrs
+  return true
 
 #-----------------------------------------------------------------------------------------------------------
 types.declare.mtr_impose_cfg
