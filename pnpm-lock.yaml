@@ -3,8 +3,9 @@ lockfileVersion: 5.4
 specifiers:
   fs-extra: ^10.1.0
   guy: 11.10.0
-  intertype: 0.101.10
+  intertype: 0.101.11
   mixa: ^0.6.1
+  rfdc: ^1.3.0
   temp: ^0.9.4
   to-width: ^1.2.0
   zx: ^7.0.8
@@ -12,8 +13,9 @@ specifiers:
 dependencies:
   fs-extra: 10.1.0
   guy: 11.10.0
-  intertype: 0.101.10
+  intertype: 0.101.11
   mixa: 0.6.1
+  rfdc: 1.3.0
   temp: 0.9.4
   to-width: 1.2.0
   zx: 7.0.8
@@ -316,8 +318,8 @@ packages:
       multimix: 5.0.0
     dev: false
 
-  /intertype/0.101.10:
-    resolution: {integrity: sha512-TxObyNFsTpi3iq3vzUTV2BUSmCM59qasAyT+AvAca32emAQ2eBNa40AftOw0Vr4PJAHszGy+VSVHeIVDO9sbLw==}
+  /intertype/0.101.11:
+    resolution: {integrity: sha512-aa51x/IdJKBGNwGF3AuY0t286YSXGVvmdLGqJgS0J8Ul9QRJtjR+CsQhVtUJUxbqUV+AxhjgUMCbAQ8142wTUA==}
     dependencies:
       guy: 11.6.0
       intertype-legacy: 7.7.1
