@@ -12,7 +12,7 @@
   "dependencies": {
     "fs-extra": "^10.1.0",
     "guy": "11.10.0",
-    "intertype": "0.101.5",
+    "intertype": "0.101.7",
     "mixa": "^0.6.1",
     "temp": "^0.9.4",
     "to-width": "^1.2.0",
