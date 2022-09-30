@@ -68,6 +68,8 @@ from [*Wikipedia: Bookbinding*](https://en.wikipedia.org/wiki/Bookbinding#Terms_
   * `folds`: how to fold; fixed (for now) at `'hb,vb,hb'`
   * `cuts`: how to cut; not supported but see
     [*Glisterings*](https://tug.org/TUGboat/tb31-3/tb99glister.pdf) for examples
+  * `split`: where to insert blank pages. A list of left-starting (positive) page numbers (LPNRs) and
+    right-starting (negative) page numbers (RPNRs), optionally with maximum number of pages to be inserted
 
 <!--
 layout =
@@ -110,25 +112,44 @@ layout =
 
 ## External Dependencies
 
-* (Xe)LaTeX
-  * `sudo apt install -y texlive-xetex xelatex`
-  * the above should install all of
-    * `fonts-texgyre`
-    * `libptexenc1`
-    * `libtexlua53`
-    * `libtexluajit2`
-    * `preview-latex-style`
-    * `tex-common`
-    * `tex-gyre`
-    * `texlive-base`
-    * `texlive-binaries`
-    * `texlive-fonts-recommended`
-    * `texlive-latex-base`
-    * `texlive-latex-extra`
-    * `texlive-latex-recommended`
-    * `texlive-pictures`
-    * `texlive-plain-generic`
-    * `texlive-xetex`
+* a suitable installation of [`LaTeX`](https://en.wikipedia.org/wiki/LaTeX); this can be one of the
+  following:
+  * (Xe)LaTeX as provided by `apt`:
+    * `sudo apt install -y texlive-xetex xelatex`
+    * the above should install all of
+      * `fonts-texgyre`
+      * `libptexenc1`
+      * `libtexlua53`
+      * `libtexluajit2`
+      * `preview-latex-style`
+      * `tex-common`
+      * `tex-gyre`
+      * `texlive-base`
+      * `texlive-binaries`
+      * `texlive-fonts-recommended`
+      * `texlive-latex-base`
+      * `texlive-latex-extra`
+      * `texlive-latex-recommended`
+      * `texlive-pictures`
+      * `texlive-plain-generic`
+      * `texlive-xetex`
+  * The [TeXLive](https://en.wikipedia.org/wiki/TeX_Live) distro:
+    * see instructions for installation at [tug.org/texlive](https://tug.org/texlive/). This has become more
+      less the standard way to install things; users be warned that the download volume is huge so you may
+      want to make sure there's enough free disk space.
+  * A new and exciting way to run TeX is [Tectonic
+    Typesetting](https://github.com/tectonic-typesetting/tectonic); one can download the smallish executable
+    from the [releases page](https://github.com/tectonic-typesetting/tectonic/releases). To test it, I
+    grapped the v0.9 `*.AppImage` file, made it executable with `chmod +x tectonic-0.9.0-x86_64.AppImage`,
+    and compiled a sample booklet with `./tectonic-0.9.0-x86_64.AppImage booklet.tex`. This downloaded the
+    requisite TeX/LaTeX files from some undisclosed but totally trustworthy location on the Internet and
+    then compiled the PDF, correctly it seems. To go this way, it is probably simplest to put a symlink name
+    `xelatex` to the `*.AppImage` somewhere on your executables path. A future version of Metteur might add
+    support for Tectonic; interested folks should also check out [Tectonic's
+    homepage](https://tectonic-typesetting.github.io/en-US/) as well as [a 2017 discussion on Hacker
+    News](https://news.ycombinator.com/item?id=14450448) and [a 2019 discussion at the same
+    venue](https://news.ycombinator.com/item?id=21172964) for more info.
+
 * `pdfinfo`
   * `sudo apt install -y poppler-utils`
 
