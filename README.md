@@ -142,13 +142,15 @@ layout =
     from the [releases page](https://github.com/tectonic-typesetting/tectonic/releases). To test it, I
     grapped the v0.9 `*.AppImage` file, made it executable with `chmod +x tectonic-0.9.0-x86_64.AppImage`,
     and compiled a sample booklet with `./tectonic-0.9.0-x86_64.AppImage booklet.tex`. This downloaded the
-    requisite TeX/LaTeX files from some undisclosed but totally trustworthy location on the Internet and
-    then compiled the PDF, correctly it seems. To go this way, it is probably simplest to put a symlink name
-    `xelatex` to the `*.AppImage` somewhere on your executables path. A future version of Metteur might add
-    support for Tectonic; interested folks should also check out [Tectonic's
-    homepage](https://tectonic-typesetting.github.io/en-US/) as well as [a 2017 discussion on Hacker
-    News](https://news.ycombinator.com/item?id=14450448) and [a 2019 discussion at the same
-    venue](https://news.ycombinator.com/item?id=21172964) for more info.
+    requisite TeX/LaTeX files from some undisclosed but totally trustworthy location on the Internet, stores
+    them (under Linux at `~/.cache/Tectonic`) and then compiled the PDF, correctly it seems. To go this way,
+    it is probably simplest to put a symlink name `xelatex` to the `*.AppImage` somewhere on your
+    executables path. A future version of Metteur might add support for Tectonic; interested folks should
+    also check out [Tectonic's homepage](https://tectonic-typesetting.github.io/en-US/) as well as [a 2017
+    discussion on Hacker News](https://news.ycombinator.com/item?id=14450448) and [a 2019 discussion at the
+    same venue](https://news.ycombinator.com/item?id=21172964) for more info. For people who'd prefer
+    software not to download other software onto their machines, see [this
+    comment](https://news.ycombinator.com/item?id=14450690) that hints at how that can be avoided.
 
 * `pdfinfo`
   * `sudo apt install -y poppler-utils`
