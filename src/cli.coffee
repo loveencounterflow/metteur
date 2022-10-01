@@ -164,7 +164,6 @@ fetch_pagedistro = ( cfg ) ->
           cfg.pagedistro  = await fetch_pagedistro cfg
           debug '^3553^', { pagedistro: cfg.pagedistro, }
           show_cfg cfg
-          process.exit 111
           mtr             = new Metteur()
           cfg.imposition  = mtr._impose cfg
           await run_tex_etc cfg
