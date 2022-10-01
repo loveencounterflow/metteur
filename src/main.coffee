@@ -29,7 +29,7 @@ page_tpl                  = """
   \\begin{tikzpicture}[overlay,remember picture]%
   \\node[anchor=north west,xshift=❰xshift❱mm,yshift=❰yshift❱mm] at (current page.north west){%
     \\fbox{\\includegraphics[width=❰width❱mm,height=❰height❱mm,angle=❰angle❱,page=❰page_nr❱]{❰source_path❱}}};%
-    \\end{tikzpicture}% ❰side❱ ❰column❱ r❰page_idx1❱ p❰page_nr❱\n"""#.replace /\s*\n\s*/g, ''
+    \\end{tikzpicture}% ❰side❱ ❰column❱ p❰page_nr❱\n"""#.replace /\s*\n\s*/g, ''
 
 
 
@@ -139,7 +139,7 @@ class Metteur extends GUY.props.Strict_owner
     #.......................................................................................................
     Q               = new GUY.props.Strict_owner seal: true, target:
       # frame_weight:     '0.25mm'
-      frame_weight:     '0mm'
+      frame_weight:     '0.125mm'
       xshift:           Template.misfit
       yshift:           Template.misfit
       angle:            Template.misfit
@@ -148,9 +148,8 @@ class Metteur extends GUY.props.Strict_owner
       side:             Template.misfit
       column:           Template.misfit
       orientation:      Template.misfit
+      sheet_nr:         0
       page_nr:          Template.misfit
-      page_idx:         Template.misfit
-      page_idx1:        Template.misfit
       source_path:      cfg.input
       correction:       { x: -2, y: +1.5, }
     #.......................................................................................................
@@ -158,26 +157,30 @@ class Metteur extends GUY.props.Strict_owner
     Q.width         = 297 / 4
     Q.height        = 210 / 2
     Q.orientation   = if cfg.orientation is 'ltr' then +1 else -1
-    for _side in [ 'recto', 'verso', ]
-      Q.side  = _side
-      sheet   = cfg.layout[ Q.side ]
-      doc_tpl.fill_some { content: '\\newpage%\n', } if Q.side is 'verso'
-      for _column in [ 'left', 'right', ]
-        Q.column = _column
-        ### TAINT precompute using named values ###
-        if Q.column is 'left'
-          Q.xshift  = 0 + Q.correction.x
-          Q.angle   = -90 * Q.orientation
-        else
-          Q.xshift  = 210 / 2 + Q.correction.x
-          Q.angle   = +90 * Q.orientation
-        for _page_nr, _page_idx in sheet[ Q.column ]
-          Q.page_nr   = _page_nr
-          Q.page_idx  = _page_idx
-          Q.page_idx1 = _page_idx + 1
-          Q.yshift    = -( 297 / 4 ) * Q.page_idx + Q.correction.y ### TAINT precompute using named values ###
-          page_tpl.fill_all Q
-          doc_tpl.fill_some { content: page_tpl.finish(), }
+    loop
+      Q.sheet_nr++
+      break if Q.sheet_nr >= 4
+      for _side in [ 'recto', 'verso', ]
+        Q.side  = _side
+        sheet   = cfg.layout[ Q.side ]
+        doc_tpl.fill_some { content: '\\newpage%\n', } if Q.sheet_nr > 1 or Q.side is 'verso'
+        for _column in [ 'left', 'right', ]
+          Q.column = _column
+          ### TAINT precompute using named values ###
+          if Q.column is 'left'
+            Q.xshift  = 0 + Q.correction.x
+            Q.angle   = -90 * Q.orientation
+          else
+            Q.xshift  = 210 / 2 + Q.correction.x
+            Q.angle   = +90 * Q.orientation
+          for page_nr, page_idx in sheet[ Q.column ]
+            Q.page_nr   = page_nr
+            pdistro_idx = ( Q.sheet_nr - 1 ) * cfg.pps + page_nr - 1
+            Q.page_nr   = cfg.pagedistro[ pdistro_idx ] ? -1 ### NOTE: using -1 as error code ###
+            debug '^234^', page_nr, '->', Q.page_nr
+            Q.yshift    = -( 297 / 4 ) * page_idx + Q.correction.y ### TAINT precompute using named values ###
+            page_tpl.fill_all Q
+            doc_tpl.fill_some { content: page_tpl.finish(), }
     doc_tpl.fill_some { frame_weight: Q.frame_weight, }
     # template = @interpolate template, Q
     #.......................................................................................................
