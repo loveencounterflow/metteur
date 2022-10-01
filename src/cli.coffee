@@ -122,8 +122,8 @@ fetch_pagedistro = ( cfg ) ->
     pnr = parseInt pnr_txt, 10
     idx = pnr - 1
     # ### thx to https://2ality.com/2018/12/creating-arrays.html#creating-ranges-of-integer-values ###
-    # R[ idx ].push Array.from { length, }, ( _, i ) -> 0
-    R[ idx ].push 0 for _ in [ 1 .. count ]
+    # R[ idx ].push Array.from { length, }, ( _, i ) -> -1
+    R[ idx ].push -1 for _ in [ 1 .. count ]
   R = R.flat()
   #.........................................................................................................
   return R
