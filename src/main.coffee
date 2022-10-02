@@ -177,7 +177,7 @@ class Metteur extends GUY.props.Strict_owner
             Q.page_nr   = page_nr
             pdistro_idx = ( Q.sheet_nr - 1 ) * cfg.pps + page_nr - 1
             Q.page_nr   = cfg.pagedistro[ pdistro_idx ] ? -1 ### NOTE: using -1 as error code ###
-            debug '^234^', page_nr, '->', Q.page_nr
+            urge '^234^', "sheet #{Q.sheet_nr} #{Q.side} #{Q.column} p#{page_nr} (#{Q.page_nr})"
             Q.yshift    = -( 297 / 4 ) * page_idx + Q.correction.y ### TAINT precompute using named values ###
             page_tpl.fill_all Q
             doc_tpl.fill_some { content: page_tpl.finish(), }
