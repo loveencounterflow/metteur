@@ -159,7 +159,7 @@ class Metteur extends GUY.props.Strict_owner
     Q.orientation   = if cfg.orientation is 'ltr' then +1 else -1
     loop
       Q.sheet_nr++
-      break if Q.sheet_nr >= 4
+      break if Q.sheet_nr > cfg.sheetcount
       for _side in [ 'recto', 'verso', ]
         Q.side  = _side
         sheet   = cfg.layout[ Q.side ]
