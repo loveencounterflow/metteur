@@ -54,6 +54,10 @@ run_tex_etc = ( cfg ) ->
   return cfg
 
 #-----------------------------------------------------------------------------------------------------------
+new_hash          = -> ( require 'crypto' ).createHash 'sha1'
+digest_from_path  = ( path ) -> ( new_hash().update FS.readFileSync path ).digest 'hex'
+
+#-----------------------------------------------------------------------------------------------------------
 path_from_executable_name = ( name ) ->
   await import( 'zx/globals' )
   try return await $$"""command -v #{name}""" catch error
@@ -69,15 +73,20 @@ _run_tex = ( cfg ) ->
   #---------------------------------------------------------------------------------------------------------
   cd cfg.tex_working_path
   ### TAINT use loop, check *.aux for changes ###
-  for count in [ 1 .. 2 ]
+  log_path    = PATH.join cfg.tex_working_path, 'xelatex-output'
+  aux_path    = PATH.join cfg.tex_working_path, 'booklet.aux'
+  ### TAINT this method has the drawback that we always run at least twice ###
+  new_digest  = null
+  old_digest  = null
+  loop
     try
       await $"""time #{paths.xelatex} --halt-on-error booklet.tex > xelatex-output"""
     catch error
-      echo FS.readFileSync ( PATH.join cfg.tex_working_path, 'xelatex-output' ), { encoding: 'utf-8', }
+      echo FS.readFileSync log_path, { encoding: 'utf-8', }
       warn error.exitCode
-      warn error.stderr
       throw error
-  # debug '^43345^', cfg
+    break if ( new_digest = digest_from_path aux_path ) is old_digest
+    old_digest = new_digest
   return null
 
 #-----------------------------------------------------------------------------------------------------------
