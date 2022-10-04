@@ -143,8 +143,8 @@ class Metteur extends GUY.props.Strict_owner
       xshift:           Template.misfit
       yshift:           Template.misfit
       angle:            Template.misfit
-      width:            Template.misfit
-      height:           Template.misfit
+      page_width:       Template.misfit
+      page_height:      Template.misfit
       side:             Template.misfit
       column:           Template.misfit
       column_idx:       Template.misfit
@@ -160,8 +160,11 @@ class Metteur extends GUY.props.Strict_owner
       correction:       { x: -2, y: +1.5, }
     #.......................................................................................................
     ### TAINT precompute using named values ###
-    Q.width         = 297 / 4
-    Q.height        = 210 / 2
+    Q.page_width    = cfg.sheet.height.value  / 4
+    Q.page_height   = cfg.sheet.width.value   / 2
+    ### TAINT should go into `cfg` ###
+    column_width    =    cfg.sheet.width.value  / cfg.layout.recto.pages.length         # i.e. cfg.columncount
+    row_height      = -( cfg.sheet.height.value / cfg.layout.recto.pages[ 0 ].length )  # i.e. cfg.rowcount
     Q.orientation   = if cfg.orientation is 'ltr' then +1 else -1
     loop
       Q.sheet_nr++
@@ -180,11 +183,13 @@ class Metteur extends GUY.props.Strict_owner
             Q.slot_map    = _slot_map
             Q.slot_idx    = _slot_idx
             Q.angle       = Q.angles[ _slot_idx ]
-            info '^3353^', { page_nr: Q.slot_map, page_idx: Q.slot_idx, angle: Q.angle, }
             pdistro_idx   = ( Q.sheet_nr - 1 ) * cfg.pps + Q.slot_map - 1
             Q.page_nr     = cfg.pagedistro[ pdistro_idx ] ? -1 ### NOTE: using -1 as error code ###
-            Q.yshift      = -( 297 / 4 ) * Q.slot_idx + Q.correction.y ### TAINT precompute using named values ###
-            urge '^234^', "sheet #{Q.sheet_nr} #{Q.side} slot c#{Q.column_idx + 1},s#{Q.slot_idx + 1}, pos #{Q.slot_map}, p#{Q.page_nr}"
+            Q.xshift      = ( column_width  * Q.column_idx  ) + Q.correction.x
+            Q.yshift      = ( row_height    * Q.slot_idx    ) + Q.correction.y
+            urge '^234^', "sheet #{Q.sheet_nr} #{Q.side} slot c#{Q.column_idx + 1},s#{Q.slot_idx + 1}, pos #{Q.slot_map}, p#{Q.page_nr} angle: #{Q.angle}"
+            page_tpl.fill_all Q
+            doc_tpl.fill_some { content: page_tpl.finish(), }
           continue
           ### TAINT precompute using named values ###
           if Q.column is 'left'
