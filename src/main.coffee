@@ -182,7 +182,7 @@ class Metteur extends GUY.props.Strict_owner
           for _slot_map, _slot_idx in Q.column
             Q.slot_map    = _slot_map
             Q.slot_idx    = _slot_idx
-            Q.angle       = Q.angles[ _slot_idx ]
+            Q.angle       = -Q.angles[ _slot_idx ] ### NOTE converting from anti-clockwise to clockwise ###
             pdistro_idx   = ( Q.sheet_nr - 1 ) * cfg.pps + Q.slot_map - 1
             Q.page_nr     = cfg.pagedistro[ pdistro_idx ] ? -1 ### NOTE: using -1 as error code ###
             Q.xshift      = ( column_width  * Q.column_idx  ) + Q.correction.x

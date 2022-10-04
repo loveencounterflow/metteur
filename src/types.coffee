@@ -175,8 +175,8 @@ declare.mtr_impose_cfg
       pps16:
         name:     'pps16'
         angles: [
-          -90       # column 1 (left)   ### NOTE where necessary, these   ###
-          +90 ]     # column 2 (right)  ### can be given for each page    ###
+          +90       # column 1 (left)   ### NOTE where necessary, these   ###
+          -90 ]     # column 2 (right)  ### can be given for each page    ###
         recto:
           pages: [
             [  4, 13, 16,  1, ]     # column 1 (left)
