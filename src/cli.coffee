@@ -44,8 +44,12 @@ run_tex_etc = ( cfg ) ->
     FS.writeFileSync cfg.tex_target_path, cfg.imposition
     whisper "wrote imposition to #{cfg.tex_target_path}"
     await _run_tex cfg
-    FS.moveSync cfg.tex_pdf_path, cfg.output, { overwrite: cfg.overwrite, }
-    help "wrote output to #{cfg.output}"
+    if FS.pathExistsSync cfg.tex_pdf_path
+      FS.moveSync cfg.tex_pdf_path, cfg.output, { overwrite: cfg.overwrite, }
+      help "wrote output to #{cfg.output}"
+    else
+      warn GUY.trm.reverse " ^metteur/cli@34^ no output produced "
+      process.exit 1
     return null
   return cfg
 
