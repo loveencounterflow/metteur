@@ -147,9 +147,15 @@ class Metteur extends GUY.props.Strict_owner
       height:           Template.misfit
       side:             Template.misfit
       column:           Template.misfit
+      column_idx:       Template.misfit
+      angles:           Template.misfit
       orientation:      Template.misfit
       sheet_nr:         0
       page_nr:          Template.misfit
+      page_idx:         Template.misfit
+      slot_map:         Template.misfit
+      slot_idx:         Template.misfit
+      angle:            Template.misfit
       source_path:      cfg.input
       correction:       { x: -2, y: +1.5, }
     #.......................................................................................................
@@ -164,8 +170,22 @@ class Metteur extends GUY.props.Strict_owner
         Q.side  = _side
         sheet   = cfg.layout[ Q.side ]
         doc_tpl.fill_some { content: '\\newpage%\n', } if Q.sheet_nr > 1 or Q.side is 'verso'
-        for _column in [ 'left', 'right', ]
-          Q.column = _column
+        # debug '^13453^', sheet
+        for _column, _column_idx in sheet.pages
+          Q.column      = _column
+          Q.column_idx  = _column_idx
+          Q.angles      = sheet.angles[ _column_idx ]
+          debug '^3353^', { _column, _column_idx, angles: Q.angles, }
+          for _slot_map, _slot_idx in Q.column
+            Q.slot_map    = _slot_map
+            Q.slot_idx    = _slot_idx
+            Q.angle       = Q.angles[ _slot_idx ]
+            info '^3353^', { page_nr: Q.slot_map, page_idx: Q.slot_idx, angle: Q.angle, }
+            pdistro_idx   = ( Q.sheet_nr - 1 ) * cfg.pps + Q.slot_map - 1
+            Q.page_nr     = cfg.pagedistro[ pdistro_idx ] ? -1 ### NOTE: using -1 as error code ###
+            Q.yshift      = -( 297 / 4 ) * Q.slot_idx + Q.correction.y ### TAINT precompute using named values ###
+            urge '^234^', "sheet #{Q.sheet_nr} #{Q.side} slot c#{Q.column_idx + 1},s#{Q.slot_idx + 1}, pos #{Q.slot_map}, p#{Q.page_nr}"
+          continue
           ### TAINT precompute using named values ###
           if Q.column is 'left'
             Q.xshift  = 0 + Q.correction.x

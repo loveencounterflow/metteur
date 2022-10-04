@@ -14,9 +14,10 @@ GUY                       = require 'guy'
 { rpr
   echo }                  = GUY.trm
 module.exports            = types = new ( require 'intertype' ).Intertype()
+{ declare }               = types
 
 #-----------------------------------------------------------------------------------------------------------
-types.declare.mtr_new_template
+declare.mtr_new_template
   $template:    'text'
   $open:        'nonempty.text'
   $close:       'nonempty.text'
@@ -32,16 +33,67 @@ types.declare.mtr_new_template
     format:       id = ( value, key ) -> value
 
 #-----------------------------------------------------------------------------------------------------------
-types.declare.mtr_template_fill
+declare.mtr_template_fill
   isa: ( x ) ->
+    assert = ( require 'node:assert' ).strict; assert.ok @ instanceof ( require 'intertype' ).Intertype
     return true
   default: null
 
 #-----------------------------------------------------------------------------------------------------------
-types.declare.mtr_orientation ( x ) -> x in [ 'ltr', 'rtl', ]
+declare.mtr_orientation ( x ) -> x in [ 'ltr', 'rtl', ]
 
 #-----------------------------------------------------------------------------------------------------------
-types.declare.mtr_layouts ( x ) ->
+declare.mtr_quantity
+  extras:         false
+  fields:
+    value:         'float'
+    unit:          'nonempty.text'
+  default:
+    value:    0
+    unit:     null
+  cast: ( x ) ->
+    # assert = ( require 'node:assert' ).strict; assert.ok @ instanceof ( require 'intertype' ).Intertype
+    return x unless types.isa.nonempty.text x
+    return x unless ( match = x.match /^(?<value>.*?)(?<unit>\D*)$/ )?
+    { value
+      unit  } = match.groups
+    value     = parseFloat value
+    return x unless types.isa.float value
+    return x unless types.isa.nonempty.text unit
+    return { value, unit, }
+
+#-----------------------------------------------------------------------------------------------------------
+declare.mtr_rectangle
+  extras:         false
+  fields:
+    width:         'mtr_length'
+    height:        'mtr_length'
+  default:
+    width:        { value: 0, unit: 'mm', }
+    height:       { value: 0, unit: 'mm', }
+  # cast: ( width, height ) ->
+  #   return
+  #     width:  { value: width,   unit: 'mm', }
+  #     height: { value: height,  unit: 'mm', }
+
+#-----------------------------------------------------------------------------------------------------------
+declare.mtr_length
+  extras:         false
+  isa:            ( x ) ->
+    assert = ( require 'node:assert' ).strict; assert.ok @ instanceof ( require 'intertype' ).Intertype
+    return false unless @isa.mtr_quantity x
+    return false unless x.unit is 'mm'
+  default:
+    value:        0
+    unit:         'mm'
+  cast: ( x ) ->
+    assert = ( require 'node:assert' ).strict; assert.ok @ instanceof ( require 'intertype' ).Intertype
+    debug '^534534^', rpr x
+    return { value: 210, unit: 'mm', }
+    @registry.mtr_quantity.cast x
+
+#-----------------------------------------------------------------------------------------------------------
+declare.mtr_layouts ( x ) ->
   return false unless @isa.object x
   for key, value of x
     return false unless @isa.nonempty.text key
@@ -49,16 +101,45 @@ types.declare.mtr_layouts ( x ) ->
   return true
 
 #-----------------------------------------------------------------------------------------------------------
-types.declare.mtr_layout
+declare.mtr_layout
+  extras:       false
   $name:        'nonempty.text'
   $recto:       'optional.mtr_sheet_side_layout'
   $verso:       'optional.mtr_sheet_side_layout'
+  $angles:      'optional.list.of.mtr_angle'
+  default:
+    name:         null
+    recto:        null
+    verso:        null
+    angles:       null
+  create: ( x ) ->
+    assert = ( require 'node:assert' ).strict; assert.ok @ instanceof ( require 'intertype' ).Intertype
+    ### TAINT only works for specific case which should be checked for ###
+    if x.angles?
+      angles = ( ( x.angles[ col_idx ] for page in col ) for col, col_idx in x.recto.pages )
+      for side in [ 'recto', 'verso' ]
+        x[ side ].angles ?= angles
+    delete x.angles
+    return x
 
 #-----------------------------------------------------------------------------------------------------------
-types.declare.mtr_sheet_side_layout ( x ) -> true
+declare.mtr_pagenr ( x ) -> ( @isa.integer x ) and ( x >= -1 )
 
 #-----------------------------------------------------------------------------------------------------------
-types.declare.mtr_split ( x ) ->
+declare.mtr_angle ( x ) -> x in [ 0, 90, 180, 270, -90, ]
+
+#-----------------------------------------------------------------------------------------------------------
+declare.mtr_sheet_side_layout
+  extras:       false
+  $pages:       'list.of.list.of.mtr_pagenr'
+  $angles:      'optional.list.of.list.of.mtr_angle'
+  default:
+    pages:        null
+    angles:       null
+
+#-----------------------------------------------------------------------------------------------------------
+declare.mtr_split ( x ) ->
+  assert = ( require 'node:assert' ).strict; assert.ok @ instanceof ( require 'intertype' ).Intertype
   return false unless @isa.nonempty.text x
   parts = ( part.trim() for part in x.split ',' )
   pnrs  = []
@@ -77,12 +158,14 @@ types.declare.mtr_split ( x ) ->
   return true
 
 #-----------------------------------------------------------------------------------------------------------
-types.declare.mtr_impose_cfg
+declare.mtr_impose_cfg
+  extras:       false
   $input:       'nonempty.text'
   $output:      'nonempty.text'
   $overwrite:   'boolean'
   $split:       'mtr_split'
   $orientation: 'mtr_orientation'
+  $sheet:       'mtr_rectangle'
   $layout:      'mtr_layout'
   $layouts:     'mtr_layouts'
   default:
@@ -91,27 +174,39 @@ types.declare.mtr_impose_cfg
     overwrite:    false
     split:        '-0'
     orientation:  'ltr' # or 'rtl' which will invert the orientation of all pages, allowing for CJK, Arabic RTL books
+    sheet:
+      width:      '210mm'
+      height:     '297mm'
     layout:
       name:       'pps16'
     layouts:
       pps16:
         name:     'pps16'
+        angles: [
+          -90       # column 1 (left)   ### NOTE where necessary, these   ###
+          +90 ]     # column 2 (right)  ### can be given for each page    ###
         recto:
-          left:   [  4, 13, 16,  1, ]
-          right:  [  5, 12,  9,  8, ]
+          pages: [
+            [  4, 13, 16,  1, ]     # column 1 (left)
+            [  5, 12,  9,  8, ] ]   # column 2 (right)
         verso:
-          left:   [  6, 11, 10,  7, ]
-          right:  [  3, 14, 15,  2, ]
+          pages: [
+            [  6, 11, 10,  7, ]     # column 1 (left)
+            [  3, 14, 15,  2, ] ]   # column 2 (right)
   create: ( cfg ) ->
+    assert = ( require 'node:assert' ).strict; assert.ok @ instanceof ( require 'intertype' ).Intertype
     R = { @registry.mtr_impose_cfg.default..., cfg..., }
     unless R.recto? and R.verso?
       unless ( layout = R.layouts[ R.layout.name ] )?
         throw new Error "^metteur/types@23^ unknown layout name #{rpr R.layout.name}"
-      R.layout = { layout..., R.layout..., }
+      R.layout = @create.mtr_layout { layout..., R.layout..., }
+    R.sheet.width   = @cast.mtr_length R.sheet.width  if @isa.text R.sheet.width
+    R.sheet.height  = @cast.mtr_length R.sheet.height if @isa.text R.sheet.height
+    debug '^456456^', R
     return R
 
 #-----------------------------------------------------------------------------------------------------------
-# types.declare.mtr_cli_impose_cfg 'mtr_impose_cfg'
+# declare.mtr_cli_impose_cfg 'mtr_impose_cfg'
   # $input:       'nonempty.text'
   # $output:      'nonempty.text'
   # $overwrite:   'boolean'
