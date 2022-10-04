@@ -84,10 +84,7 @@ declare.mtr_length
   default:
     value:        0
     unit:         'mm'
-  cast: ( x ) ->
-    debug '^534534^', rpr x
-    return { value: 210, unit: 'mm', }
-    @registry.mtr_quantity.cast x
+  cast: ( x ) -> @registry.mtr_quantity.cast x
 
 #-----------------------------------------------------------------------------------------------------------
 declare.mtr_layouts ( x ) ->
