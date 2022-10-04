@@ -68,8 +68,15 @@ _run_tex = ( cfg ) ->
     xelatex: await path_from_executable_name 'xelatex'
   #---------------------------------------------------------------------------------------------------------
   cd cfg.tex_working_path
-  await $"""time #{paths.xelatex} --halt-on-error booklet.tex > xelatex-output"""
-  await $"""time #{paths.xelatex} --halt-on-error booklet.tex > xelatex-output"""
+  ### TAINT use loop, check *.aux for changes ###
+  for count in [ 1 .. 2 ]
+    try
+      await $"""time #{paths.xelatex} --halt-on-error booklet.tex > xelatex-output"""
+    catch error
+      echo FS.readFileSync ( PATH.join cfg.tex_working_path, 'xelatex-output' ), { encoding: 'utf-8', }
+      warn error.exitCode
+      warn error.stderr
+      throw error
   # debug '^43345^', cfg
   return null
 
