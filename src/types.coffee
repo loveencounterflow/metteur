@@ -83,6 +83,7 @@ declare.mtr_length
     assert = ( require 'node:assert' ).strict; assert.ok @ instanceof ( require 'intertype' ).Intertype
     return false unless @isa.mtr_quantity x
     return false unless x.unit is 'mm'
+    return true
   default:
     value:        0
     unit:         'mm'
