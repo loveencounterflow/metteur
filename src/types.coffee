@@ -35,7 +35,6 @@ declare.mtr_new_template
 #-----------------------------------------------------------------------------------------------------------
 declare.mtr_template_fill
   isa: ( x ) ->
-    assert = ( require 'node:assert' ).strict; assert.ok @ instanceof ( require 'intertype' ).Intertype
     return true
   default: null
 
@@ -52,7 +51,6 @@ declare.mtr_quantity
     value:    0
     unit:     null
   cast: ( x ) ->
-    # assert = ( require 'node:assert' ).strict; assert.ok @ instanceof ( require 'intertype' ).Intertype
     return x unless types.isa.nonempty.text x
     return x unless ( match = x.match /^(?<value>.*?)(?<unit>\D*)$/ )?
     { value
@@ -80,7 +78,6 @@ declare.mtr_rectangle
 declare.mtr_length
   extras:         false
   isa:            ( x ) ->
-    assert = ( require 'node:assert' ).strict; assert.ok @ instanceof ( require 'intertype' ).Intertype
     return false unless @isa.mtr_quantity x
     return false unless x.unit is 'mm'
     return true
@@ -88,7 +85,6 @@ declare.mtr_length
     value:        0
     unit:         'mm'
   cast: ( x ) ->
-    assert = ( require 'node:assert' ).strict; assert.ok @ instanceof ( require 'intertype' ).Intertype
     debug '^534534^', rpr x
     return { value: 210, unit: 'mm', }
     @registry.mtr_quantity.cast x
@@ -114,7 +110,6 @@ declare.mtr_layout
     verso:        null
     angles:       null
   create: ( x ) ->
-    assert = ( require 'node:assert' ).strict; assert.ok @ instanceof ( require 'intertype' ).Intertype
     ### TAINT only works for specific case which should be checked for ###
     if x.angles?
       angles = ( ( x.angles[ col_idx ] for page in col ) for col, col_idx in x.recto.pages )
@@ -140,7 +135,6 @@ declare.mtr_sheet_side_layout
 
 #-----------------------------------------------------------------------------------------------------------
 declare.mtr_split ( x ) ->
-  assert = ( require 'node:assert' ).strict; assert.ok @ instanceof ( require 'intertype' ).Intertype
   return false unless @isa.nonempty.text x
   parts = ( part.trim() for part in x.split ',' )
   pnrs  = []
@@ -195,7 +189,6 @@ declare.mtr_impose_cfg
             [  6, 11, 10,  7, ]     # column 1 (left)
             [  3, 14, 15,  2, ] ]   # column 2 (right)
   create: ( cfg ) ->
-    assert = ( require 'node:assert' ).strict; assert.ok @ instanceof ( require 'intertype' ).Intertype
     R = { @registry.mtr_impose_cfg.default..., cfg..., }
     unless R.recto? and R.verso?
       unless ( layout = R.layouts[ R.layout.name ] )?
