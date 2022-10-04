@@ -166,7 +166,7 @@ fetch_pagedistro = ( cfg ) ->
           show_cfg cfg
           mtr             = new Metteur()
           cfg.imposition  = mtr._impose cfg
-          process.exit 111
+          # process.exit 111
           await run_tex_etc cfg
           return null
         flags:
