@@ -28,7 +28,7 @@ misfit                    = Symbol 'misfit'
 page_tpl                  = """
   \\begin{tikzpicture}[overlay,remember picture]%
   \\node[anchor=north west,xshift=❰xshift❱mm,yshift=❰yshift❱mm] at (current page.north west){%
-    \\fbox{\\includegraphics[width=❰width❱mm,height=❰height❱mm,angle=❰angle❱,page=❰page_nr❱]{❰source_path❱}}};%
+    \\fbox{\\includegraphics[width=❰page_width❱mm,height=❰page_height❱mm,angle=❰angle❱,page=❰page_nr❱]{❰source_path❱}}};%
     \\end{tikzpicture}% ❰side❱ ❰column❱ p❰page_nr❱\n"""#.replace /\s*\n\s*/g, ''
 
 
