@@ -96,6 +96,22 @@ declare.mtr_layouts ( x ) ->
 
 #-----------------------------------------------------------------------------------------------------------
 declare.mtr_layout
+  isa:        'mtr_layout_str.or.mtr_layout_obj'
+  cast: ( x ) ->
+    # x ?= @registry.mtr_layout_str.default
+    return x unless @isa.nonempty.text x
+    unless ( R = known_layouts[ x ] )?
+      known_layout_names = ( ( rpr name ) for name of known_layouts ).join ', '
+      throw new Error "^metteur/types@24^ unknown layout name: #{rpr x}; known layouts are: #{known_layout_names}"
+    return @registry.mtr_layout_obj.create R
+
+#-----------------------------------------------------------------------------------------------------------
+declare.mtr_layout_str
+  isa:        'nonempty.text'
+  default:    'pps16'
+
+#-----------------------------------------------------------------------------------------------------------
+declare.mtr_layout_obj
   extras:       false
   $name:        'nonempty.text'
   $recto:       'optional.mtr_sheet_side_layout'
@@ -168,14 +184,10 @@ declare.mtr_impose_cfg
     sheet:
       width:      '210mm'
       height:     '297mm'
-    layout:
-      name:       'pps16'
+    layout:       'pps16'
   create: ( cfg ) ->
-    R = { @registry.mtr_impose_cfg.default..., cfg..., }
-    unless R.recto? and R.verso?
-      unless ( layout = R.layouts[ R.layout.name ] )?
-        throw new Error "^metteur/types@23^ unknown layout name #{rpr R.layout.name}"
-      R.layout = @create.mtr_layout { layout..., R.layout..., }
+    R               = { @registry.mtr_impose_cfg.default..., cfg..., }
+    R.layout        = @cast.mtr_layout R.layout
     R.sheet.width   = @cast.mtr_length R.sheet.width  if @isa.text R.sheet.width
     R.sheet.height  = @cast.mtr_length R.sheet.height if @isa.text R.sheet.height
     debug '^456456^', R
