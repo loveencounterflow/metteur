@@ -103,6 +103,7 @@ declare.mtr_layout
     unless ( R = known_layouts[ x ] )?
       known_layout_names = ( ( rpr name ) for name of known_layouts ).join ', '
       throw new Error "^metteur/types@24^ unknown layout name: #{rpr x}; known layouts are: #{known_layout_names}"
+    debug '^43-1^', R
     return @registry.mtr_layout_obj.create R
 
 #-----------------------------------------------------------------------------------------------------------
@@ -113,28 +114,39 @@ declare.mtr_layout_str
 #-----------------------------------------------------------------------------------------------------------
 declare.mtr_layout_obj
   extras:       false
-  $name:        'nonempty.text'
-  $recto:       'mtr_sheet_side_layout'
-  $verso:       'mtr_sheet_side_layout'
-  $angles:      'optional.list.of.mtr_angle'
+  fields:
+    name:         'nonempty.text'
+    pps:          'positive1.integer'
+    recto:        'mtr_sheet_side_layout'
+    verso:        'mtr_sheet_side_layout'
+    angles:       'optional.list.of.mtr_angle'
+    # pages_standing: 'boolean'
   default:
-    name:         null
-    recto:        null
-    verso:        null
-    angles:       null
+    name:           null
+    pps:            null
+    recto:          null
+    verso:          null
+    angles:         null
+    # pages_standing: null
   create: ( x ) ->
     ### TAINT only works for specific case which should be checked for ###
+    ### TAINT this should go into `prepare()` method when implemented ###
     if x.angles?
       angles = ( ( x.angles[ col_idx ] for page in col ) for col, col_idx in x.recto.pages )
       for side in [ 'recto', 'verso' ]
         x[ side ].angles ?= angles
     delete x.angles
+    ### TAINT should also check for consistency of angles ###
+    debug '^43-2^', x.recto.angles
+    x.pages_standing = x.recto.angles[ 0 ][ 0 ] in [ 0, 180, ]
+    debug '^43-2^', x
     return x
 
 #-----------------------------------------------------------------------------------------------------------
 declare.mtr_pagenr ( x ) -> ( @isa.integer x ) and ( x >= -1 )
 
 #-----------------------------------------------------------------------------------------------------------
+### TAINT may want to use words like up, upsidedown, left, right or similar ###
 declare.mtr_angle ( x ) -> x in [ 0, 90, 180, 270, -90, ]
 
 #-----------------------------------------------------------------------------------------------------------
@@ -196,8 +208,28 @@ declare.mtr_impose_cfg
 #-----------------------------------------------------------------------------------------------------------
 ### we put known layouts here for the time being: ###
 known_layouts =
+  pps8:
+    name:     'pps8'
+    pps:      8 ### TAINT should not have to be set explicitly; pending implementation of Intertype `prepare()` ###
+    recto:
+      angles: [
+        [ 180, 0, ]
+        [ 180, 0, ]
+        ]
+      pages: [
+        [  5, 8, ]     # column 1 (left)
+        [  4, 1, ] ]   # column 2 (right)
+    verso:
+      angles: [
+        [ 180, 0, ]
+        [ 180, 0, ]
+        ]
+      pages: [
+        [  3, 2, ]     # column 1 (left)
+        [  6, 7, ] ]   # column 2 (right)
   pps16:
     name:     'pps16'
+    pps:      16 ### TAINT should not have to be set explicitly; pending implementation of Intertype `prepare()` ###
     angles: [
       +90       # column 1 (left)   ### NOTE where necessary, these   ###
       -90 ]     # column 2 (right)  ### can be given for each page    ###

@@ -25,10 +25,16 @@ misfit                    = Symbol 'misfit'
 { freeze }                = GUY.lft
 # { equals }                = types
 # { HDML }                  = require 'hdml'
+# page_tpl                  = """
+#   \\begin{tikzpicture}[overlay,remember picture]%
+#   \\node[anchor=north west,xshift=❰xshift❱mm,yshift=❰yshift❱mm] at (current page.north west){%
+#     \\fbox{\\includegraphics[width=❰page_width❱mm,height=❰page_height❱mm,angle=❰angle_ccw❱,page=❰page_nr❱]{❰source_path❱}}};%
+#     \\end{tikzpicture}% sheet ❰sheet_nr❱ ❰side_name❱ col ❰column_nr❱ row ❰slot_nr❱, pos ❰slot_map❱, p❰page_nr❱ ↷ ❰angle_cw❱°\n"""#.replace /\s*\n\s*/g, ''
 page_tpl                  = """
   \\begin{tikzpicture}[overlay,remember picture]%
   \\node[anchor=north west,xshift=❰xshift❱mm,yshift=❰yshift❱mm] at (current page.north west){%
-    \\fbox{\\includegraphics[width=❰page_width❱mm,height=❰page_height❱mm,angle=❰angle_ccw❱,page=❰page_nr❱]{❰source_path❱}}};%
+    \\rotatebox{❰angle_cw❱}{%
+    \\fbox{\\includegraphics[width=❰page_width❱mm,height=❰page_height❱mm,page=❰page_nr❱]{❰source_path❱}}}};%
     \\end{tikzpicture}% sheet ❰sheet_nr❱ ❰side_name❱ col ❰column_nr❱ row ❰slot_nr❱, pos ❰slot_map❱, p❰page_nr❱ ↷ ❰angle_cw❱°\n"""#.replace /\s*\n\s*/g, ''
 
 
@@ -141,6 +147,10 @@ class Metteur extends GUY.props.Strict_owner
       frame_weight:     '0.125mm'
       xshift:           Template.misfit
       yshift:           Template.misfit
+      column_count:     Template.misfit
+      row_count:        Template.misfit
+      column_width:     Template.misfit
+      row_height:       Template.misfit
       page_width:       Template.misfit
       page_height:      Template.misfit
       side_name:        Template.misfit
@@ -161,12 +171,14 @@ class Metteur extends GUY.props.Strict_owner
       source_path:      cfg.input
       correction:       { x: -2, y: +1.5, }
     #.......................................................................................................
-    ### TAINT precompute using named values ###
-    Q.page_width    = cfg.sheet.height.value  / 4
-    Q.page_height   = cfg.sheet.width.value   / 2
-    ### TAINT should go into `cfg` ###
-    column_width    =    cfg.sheet.width.value  / cfg.layout.recto.pages.length         # i.e. cfg.columncount
-    row_height      = -( cfg.sheet.height.value / cfg.layout.recto.pages[ 0 ].length )  # i.e. cfg.rowcount
+    Q.column_count  = cfg.layout.recto.pages.length
+    Q.row_count     = cfg.layout.recto.pages[ 0 ].length
+    Q.column_width  =    cfg.sheet.width.value  / Q.column_count
+    Q.row_height    = -( cfg.sheet.height.value / Q.row_count)
+    Q.page_width    = cfg.sheet.width.value   / Q.column_count
+    Q.page_height   = cfg.sheet.height.value  / Q.row_count
+    unless cfg.pages_standing
+      [ Q.page_width, Q.page_height, ] = [ Q.page_height, Q.page_width, ]
     Q.orientation   = if cfg.orientation is 'ltr' then +1 else -1
     loop
       Q.sheet_nr++
@@ -187,10 +199,10 @@ class Metteur extends GUY.props.Strict_owner
             Q.slot_nr     = Q.slot_idx + 1
             Q.angle_cw    = Q.angles[ _slot_idx ]
             Q.angle_ccw   = -Q.angle_cw ### NOTE converting from anti-clockwise to clockwise ###
-            pdistro_idx   = ( Q.sheet_nr - 1 ) * cfg.pps + Q.slot_map - 1
+            pdistro_idx   = ( Q.sheet_nr - 1 ) * cfg.layout.pps + Q.slot_map - 1
             Q.page_nr     = cfg.pagedistro[ pdistro_idx ] ? -1 ### NOTE: using -1 as error code ###
-            Q.xshift      = ( column_width  * Q.column_idx  ) + Q.correction.x
-            Q.yshift      = ( row_height    * Q.slot_idx    ) + Q.correction.y
+            Q.xshift      = ( Q.column_width  * Q.column_idx  ) + Q.correction.x
+            Q.yshift      = ( Q.row_height    * Q.slot_idx    ) + Q.correction.y
             urge '^234^', "sheet #{Q.sheet_nr} #{Q.side_name} slot c#{Q.column_idx + 1},s#{Q.slot_idx + 1}, pos #{Q.slot_map}, p#{Q.page_nr} ↷ #{Q.angle_cw}"
             page_tpl.fill_all Q
             doc_tpl.fill_some { content: page_tpl.finish(), }

@@ -112,10 +112,10 @@ fetch_pagecount = ( cfg ) ->
 #-----------------------------------------------------------------------------------------------------------
 fetch_pagedistro = ( cfg ) ->
   cfg.pagecount       = await fetch_pagecount cfg
-  cfg.sheetcount      = cfg.pagecount // cfg.pps
-  remainder           = cfg.pagecount %% cfg.pps
+  cfg.sheetcount      = cfg.pagecount // cfg.layout.pps
+  remainder           = cfg.pagecount %% cfg.layout.pps
   cfg.sheetcount++ if remainder isnt 0
-  cfg.blank_pagecount = cfg.pps - remainder
+  cfg.blank_pagecount = cfg.layout.pps - remainder
   R                   = [ 1 .. cfg.pagecount ]
   return R if cfg.blank_pagecount is 0
   split               = deep_copy cfg.mtr_split
@@ -180,7 +180,6 @@ fetch_pagedistro = ( cfg ) ->
           cfg.input       = resolve cfg.input
           cfg.output      = resolve cfg.output
           ### TAINT compute from layout, user cfg ###
-          cfg.pps         = 16 ### pages per sheet ###
           cfg.pagedistro  = await fetch_pagedistro cfg
           debug '^3553^', { pagedistro: cfg.pagedistro, }
           show_cfg cfg
