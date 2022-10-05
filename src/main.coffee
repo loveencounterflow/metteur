@@ -187,23 +187,6 @@ class Metteur extends GUY.props.Strict_owner
             Q.page_nr     = cfg.pagedistro[ pdistro_idx ] ? -1 ### NOTE: using -1 as error code ###
             Q.xshift      = ( column_width  * Q.column_idx  ) + Q.correction.x
             Q.yshift      = ( row_height    * Q.slot_idx    ) + Q.correction.y
-            urge '^234^', "sheet #{Q.sheet_nr} #{Q.side} slot c#{Q.column_idx + 1},s#{Q.slot_idx + 1}, pos #{Q.slot_map}, p#{Q.page_nr} angle: #{Q.angle}"
-            page_tpl.fill_all Q
-            doc_tpl.fill_some { content: page_tpl.finish(), }
-          continue
-          ### TAINT precompute using named values ###
-          if Q.column is 'left'
-            Q.xshift  = 0 + Q.correction.x
-            Q.angle   = -90 * Q.orientation
-          else
-            Q.xshift  = 210 / 2 + Q.correction.x
-            Q.angle   = +90 * Q.orientation
-          for page_nr, page_idx in sheet[ Q.column ]
-            Q.page_nr   = page_nr
-            pdistro_idx = ( Q.sheet_nr - 1 ) * cfg.pps + page_nr - 1
-            Q.page_nr   = cfg.pagedistro[ pdistro_idx ] ? -1 ### NOTE: using -1 as error code ###
-            urge '^234^', "sheet #{Q.sheet_nr} #{Q.side} #{Q.column} p#{page_nr} (#{Q.page_nr})"
-            Q.yshift    = -( 297 / 4 ) * page_idx + Q.correction.y ### TAINT precompute using named values ###
             page_tpl.fill_all Q
             doc_tpl.fill_some { content: page_tpl.finish(), }
     doc_tpl.fill_some { frame_weight: Q.frame_weight, }
