@@ -173,12 +173,14 @@ class Metteur extends GUY.props.Strict_owner
     #.......................................................................................................
     Q.column_count  = cfg.layout.recto.pages.length
     Q.row_count     = cfg.layout.recto.pages[ 0 ].length
-    Q.column_width  =    cfg.sheet.width.value  / Q.column_count
-    Q.row_height    = -( cfg.sheet.height.value / Q.row_count)
-    Q.page_width    = cfg.sheet.width.value   / Q.column_count
-    Q.page_height   = cfg.sheet.height.value  / Q.row_count
-    unless cfg.pages_standing
-      [ Q.page_width, Q.page_height, ] = [ Q.page_height, Q.page_width, ]
+    Q.column_width  = cfg.sheet.width.value   / Q.column_count
+    Q.row_height    = cfg.sheet.height.value  / Q.row_count
+    if cfg.layout.pages_standing
+      Q.page_width    = Q.column_width
+      Q.page_height   = Q.row_height
+    else
+      Q.page_width    = Q.row_height
+      Q.page_height   = Q.column_width
     Q.orientation   = if cfg.orientation is 'ltr' then +1 else -1
     loop
       Q.sheet_nr++
@@ -201,8 +203,8 @@ class Metteur extends GUY.props.Strict_owner
             Q.angle_ccw   = -Q.angle_cw ### NOTE converting from anti-clockwise to clockwise ###
             pdistro_idx   = ( Q.sheet_nr - 1 ) * cfg.layout.pps + Q.slot_map - 1
             Q.page_nr     = cfg.pagedistro[ pdistro_idx ] ? -1 ### NOTE: using -1 as error code ###
-            Q.xshift      = ( Q.column_width  * Q.column_idx  ) + Q.correction.x
-            Q.yshift      = ( Q.row_height    * Q.slot_idx    ) + Q.correction.y
+            Q.xshift      = (  Q.column_width  * Q.column_idx  ) + Q.correction.x
+            Q.yshift      = ( -Q.row_height    * Q.slot_idx    ) + Q.correction.y
             urge '^234^', "sheet #{Q.sheet_nr} #{Q.side_name} slot c#{Q.column_idx + 1},s#{Q.slot_idx + 1}, pos #{Q.slot_map}, p#{Q.page_nr} ↷ #{Q.angle_cw}"
             page_tpl.fill_all Q
             doc_tpl.fill_some { content: page_tpl.finish(), }
