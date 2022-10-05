@@ -217,16 +217,14 @@ known_layouts =
     recto:
       angles: [
         [ 180, 0, ]
-        [ 180, 0, ]
-        ]
+        [ 180, 0, ] ]
       pages: [
         [  5, 8, ]     # column 1 (left)
         [  4, 1, ] ]   # column 2 (right)
     verso:
       angles: [
         [ 180, 0, ]
-        [ 180, 0, ]
-        ]
+        [ 180, 0, ] ]
       pages: [
         [  3, 2, ]     # column 1 (left)
         [  6, 7, ] ]   # column 2 (right)
