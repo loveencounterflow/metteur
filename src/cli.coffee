@@ -179,7 +179,6 @@ fetch_pagedistro = ( cfg ) ->
           cfg.mtr_split   = types.data.mtr_split
           cfg.input       = resolve cfg.input
           cfg.output      = resolve cfg.output
-          ### TAINT compute from layout, user cfg ###
           cfg.pagedistro  = await fetch_pagedistro cfg
           debug '^3553^', { pagedistro: cfg.pagedistro, }
           show_cfg cfg
