@@ -129,13 +129,7 @@ declare.mtr_layout_obj
     angles:         null
     # pages_standing: null
   create: ( x ) ->
-    ### TAINT only works for specific case which should be checked for ###
     ### TAINT this should go into `prepare()` method when implemented ###
-    if x.angles?
-      angles = ( ( x.angles[ col_idx ] for page in col ) for col, col_idx in x.recto.pages )
-      for side in [ 'recto', 'verso' ]
-        x[ side ].angles ?= angles
-    delete x.angles
     ### TAINT should also check for consistency of angles ###
     debug '^43-2^', x.recto.angles
     x.pages_standing = x.recto.angles[ 0 ][ 0 ] in [ 0, 180, ]
@@ -229,15 +223,18 @@ known_layouts =
         [  6, 7, ] ]   # column 2 (right)
   pps16:
     name:     'pps16'
-    pps:      16 ### TAINT should not have to be set explicitly; pending implementation of Intertype `prepare()` ###
-    angles: [
-      +90       # column 1 (left)   ### NOTE where necessary, these   ###
-      -90 ]     # column 2 (right)  ### can be given for each page    ###
+    # pps:      16 ### TAINT should not have to be set explicitly; pending implementation of Intertype `prepare()` ###
     recto:
+      angles: [
+        [ -90, -90, -90, -90, ]       # column 1 (left)
+        [ +90, +90, +90, +90, ] ]     # column 2 (right)
       pages: [
         [  4, 13, 16,  1, ]     # column 1 (left)
         [  5, 12,  9,  8, ] ]   # column 2 (right)
     verso:
+      angles: [
+        [ -90, -90, -90, -90, ]       # column 1 (left)
+        [ +90, +90, +90, +90, ] ]     # column 2 (right)
       pages: [
         [  6, 11, 10,  7, ]     # column 1 (left)
         [  3, 14, 15,  2, ] ]   # column 2 (right)
