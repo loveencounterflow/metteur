@@ -222,3 +222,4 @@ of page `-n`:
 ## Is Done
 
 * **[+]** implement `--help` option for CLI
+* **[+]** do not store layouts in declaration of type `mtr_impose_cfg`
