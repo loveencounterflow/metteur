@@ -217,6 +217,8 @@ of page `-n`:
 * **[–]** implement `--pages` CLI argument to select which pages whould be taken from source in which order;
   can use both positive numbers for 1-based page №s and negative numbers for pages counted from back as well
   as ranges (use `..` for those to avoid conflict with minus sign)
+* **[–]** consider to notate layouts in terms of rows instead of columns; this allows ro mimick the
+  geometric arrangement in the notation for easier reference
 
 
 ## Is Done
