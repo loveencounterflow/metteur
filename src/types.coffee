@@ -114,8 +114,8 @@ declare.mtr_layout_str
 declare.mtr_layout_obj
   extras:       false
   $name:        'nonempty.text'
-  $recto:       'optional.mtr_sheet_side_layout'
-  $verso:       'optional.mtr_sheet_side_layout'
+  $recto:       'mtr_sheet_side_layout'
+  $verso:       'mtr_sheet_side_layout'
   $angles:      'optional.list.of.mtr_angle'
   default:
     name:         null
