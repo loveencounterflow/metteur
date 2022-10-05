@@ -159,7 +159,6 @@ declare.mtr_impose_cfg
   $orientation: 'mtr_orientation'
   $sheet:       'mtr_rectangle'
   $layout:      'mtr_layout'
-  $layouts:     'mtr_layouts'
   default:
     input:        null
     output:       null
@@ -171,20 +170,6 @@ declare.mtr_impose_cfg
       height:     '297mm'
     layout:
       name:       'pps16'
-    layouts:
-      pps16:
-        name:     'pps16'
-        angles: [
-          +90       # column 1 (left)   ### NOTE where necessary, these   ###
-          -90 ]     # column 2 (right)  ### can be given for each page    ###
-        recto:
-          pages: [
-            [  4, 13, 16,  1, ]     # column 1 (left)
-            [  5, 12,  9,  8, ] ]   # column 2 (right)
-        verso:
-          pages: [
-            [  6, 11, 10,  7, ]     # column 1 (left)
-            [  3, 14, 15,  2, ] ]   # column 2 (right)
   create: ( cfg ) ->
     R = { @registry.mtr_impose_cfg.default..., cfg..., }
     unless R.recto? and R.verso?
@@ -197,14 +182,19 @@ declare.mtr_impose_cfg
     return R
 
 #-----------------------------------------------------------------------------------------------------------
-# declare.mtr_cli_impose_cfg 'mtr_impose_cfg'
-  # $input:       'nonempty.text'
-  # $output:      'nonempty.text'
-  # $overwrite:   'boolean'
-  # $split:       'integer'
-  # default:
-  #   input:      null
-  #   output:     null
-  #   overwrite:  false
-  #   split:      0
+### we put known layouts here for the time being: ###
+known_layouts =
+  pps16:
+    name:     'pps16'
+    angles: [
+      +90       # column 1 (left)   ### NOTE where necessary, these   ###
+      -90 ]     # column 2 (right)  ### can be given for each page    ###
+    recto:
+      pages: [
+        [  4, 13, 16,  1, ]     # column 1 (left)
+        [  5, 12,  9,  8, ] ]   # column 2 (right)
+    verso:
+      pages: [
+        [  6, 11, 10,  7, ]     # column 1 (left)
+        [  3, 14, 15,  2, ] ]   # column 2 (right)
 
