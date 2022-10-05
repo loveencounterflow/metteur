@@ -190,6 +190,10 @@ fetch_pagedistro = ( cfg ) ->
           await run_tex_etc cfg
           return null
         flags:
+          'layout':
+            alias:        'l'
+            type:         String
+            description:  "name of a layout; defaults to 'pps16'"
           'input':
             alias:        'i'
             type:         String
