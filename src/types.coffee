@@ -172,6 +172,9 @@ declare.mtr_split ( x ) ->
   return true
 
 #-----------------------------------------------------------------------------------------------------------
+declare.guy_strict_owner ( x ) -> true # x instanceof GUY.props.Strict_owner
+
+#-----------------------------------------------------------------------------------------------------------
 declare.mtr_impose_cfg
   extras:       false
   $input:       'nonempty.text'
@@ -181,6 +184,7 @@ declare.mtr_impose_cfg
   $orientation: 'mtr_orientation'
   $sheet:       'mtr_rectangle'
   $layout:      'mtr_layout'
+  isa:          'guy_strict_owner'
   default:
     input:        null
     output:       null
@@ -197,7 +201,8 @@ declare.mtr_impose_cfg
     R.sheet.width   = @cast.mtr_length R.sheet.width  if @isa.text R.sheet.width
     R.sheet.height  = @cast.mtr_length R.sheet.height if @isa.text R.sheet.height
     debug '^456456^', R
-    return R
+    # R = new GUY.props.Strict_owner { target: R, seal: true, freeze: true, }
+    return new GUY.props.Strict_owner { target: R, }
 
 #-----------------------------------------------------------------------------------------------------------
 ### we put known layouts here for the time being: ###
