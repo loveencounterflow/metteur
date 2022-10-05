@@ -116,24 +116,27 @@ declare.mtr_layout_obj
   extras:       false
   fields:
     name:         'nonempty.text'
-    pps:          'positive1.integer'
     recto:        'mtr_sheet_side_layout'
     verso:        'mtr_sheet_side_layout'
     angles:       'optional.list.of.mtr_angle'
+    # pps:          'positive1.integer'
     # pages_standing: 'boolean'
   default:
     name:           null
-    pps:            null
     recto:          null
     verso:          null
     angles:         null
+    # pps:            null
     # pages_standing: null
   create: ( x ) ->
     ### TAINT this should go into `prepare()` method when implemented ###
     ### TAINT should also check for consistency of angles ###
     debug '^43-2^', x.recto.angles
-    x.pages_standing = x.recto.angles[ 0 ][ 0 ] in [ 0, 180, ]
-    debug '^43-2^', x
+    x.pps             = 0
+    x.pps            += p.length for p in x.recto.pages
+    x.pps            += p.length for p in x.verso.pages
+    x.pages_standing  = x.recto.angles[ 0 ][ 0 ] in [ 0, 180, ]
+    debug '^43-3^', x
     return x
 
 #-----------------------------------------------------------------------------------------------------------
@@ -209,7 +212,7 @@ declare.mtr_impose_cfg
 known_layouts =
   pps8:
     name:     'pps8'
-    pps:      8 ### TAINT should not have to be set explicitly; pending implementation of Intertype `prepare()` ###
+    # pps:      8 ### TAINT should not have to be set explicitly; pending implementation of Intertype `prepare()` ###
     recto:
       angles: [
         [ 180, 0, ]
