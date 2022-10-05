@@ -96,7 +96,8 @@ declare.mtr_layouts ( x ) ->
 
 #-----------------------------------------------------------------------------------------------------------
 declare.mtr_layout
-  isa:        'mtr_layout_str.or.mtr_layout_obj'
+  # isa:        'mtr_layout_str.or.mtr_layout_obj'
+  isa:        'anything'
   cast: ( x ) ->
     # x ?= @registry.mtr_layout_str.default
     return x unless @isa.nonempty.text x
