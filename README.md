@@ -117,40 +117,32 @@ of page `-n`:
   following:
   * (Xe)LaTeX as provided by `apt`:
     * `sudo apt install -y texlive-xetex xelatex`
-    * the above should install all of
-      * `fonts-texgyre`
-      * `libptexenc1`
-      * `libtexlua53`
-      * `libtexluajit2`
-      * `preview-latex-style`
-      * `tex-common`
-      * `tex-gyre`
-      * `texlive-base`
-      * `texlive-binaries`
-      * `texlive-fonts-recommended`
-      * `texlive-latex-base`
-      * `texlive-latex-extra`
-      * `texlive-latex-recommended`
-      * `texlive-pictures`
-      * `texlive-plain-generic`
-      * `texlive-xetex`
+    * the above should install all of `fonts-texgyre`, `libptexenc1`, `libtexlua53`, `libtexluajit2`,
+      `preview-latex-style`, `tex-common`, `tex-gyre`, `texlive-base`, `texlive-binaries`,
+      `texlive-fonts-recommended`, `texlive-latex-base`, `texlive-latex-extra`, `texlive-latex-recommended`,
+      `texlive-pictures`, `texlive-plain-generic`, and `texlive-xetex`.
   * The [TeXLive](https://en.wikipedia.org/wiki/TeX_Live) distro:
     * see instructions for installation at [tug.org/texlive](https://tug.org/texlive/). This has become more
-      less the standard way to install things; users be warned that the download volume is huge so you may
-      want to make sure there's enough free disk space.
+      less the standard way to install TeX; users be warned that the download volume is huge so you may want
+      to make sure there's enough free disk space. Years ago there used to be an option to download a small
+      installer that would then pull in the rest, but while that spared you from having to download one huge
+      package, the installer unpacked each package into a temporary location and would then *copy* (not
+      move) each component into its final location without deleting the download immediately, meaning it
+      actually used up *twice* the total volume.
   * A new and exciting way to run TeX is [Tectonic
     Typesetting](https://github.com/tectonic-typesetting/tectonic); one can download the smallish executable
     from the [releases page](https://github.com/tectonic-typesetting/tectonic/releases). To test it, I
-    grapped the v0.9 `*.AppImage` file, made it executable with `chmod +x tectonic-0.9.0-x86_64.AppImage`,
+    grabbed the v0.9 `*.AppImage` file, made it executable with `chmod +x tectonic-0.9.0-x86_64.AppImage`,
     and compiled a sample booklet with `./tectonic-0.9.0-x86_64.AppImage booklet.tex`. This downloaded the
-    requisite TeX/LaTeX files from some undisclosed but totally trustworthy location on the Internet, stores
-    them (under Linux at `~/.cache/Tectonic`) and then compiled the PDF, correctly it seems. To go this way,
-    it is probably simplest to put a symlink name `xelatex` to the `*.AppImage` somewhere on your
-    executables path. A future version of Metteur might add support for Tectonic; interested folks should
-    also check out [Tectonic's homepage](https://tectonic-typesetting.github.io/en-US/) as well as [a 2017
-    discussion on Hacker News](https://news.ycombinator.com/item?id=14450448) and [a 2019 discussion at the
-    same venue](https://news.ycombinator.com/item?id=21172964) for more info. For people who'd prefer
-    software not to download other software onto their machines, see [this
+    requisite TeX/LaTeX files from some undisclosed but totally trustworthy location on the Internet, stored
+    them (in `~/.cache/Tectonic`) and then compiled the PDF, and did so correctly it seems. To use Metteur
+    with Tectonic, it will for the time being probably simplest to create a symlink to the `*.AppImage`
+    named `xelatex` and put it somewhere on your executables path. A future version of Metteur might add
+    support for Tectonic; interested folks should also check out [Tectonic's
+    homepage](https://tectonic-typesetting.github.io/en-US/) as well as [a 2017 discussion on Hacker
+    News](https://news.ycombinator.com/item?id=14450448) and [a 2019 discussion at the same
+    venue](https://news.ycombinator.com/item?id=21172964) for more info. For people who'd prefer software
+    not to download other software onto their machines, see [this
     comment](https://news.ycombinator.com/item?id=14450690) that hints at how that can be avoided.
 
 * `pdfinfo`
