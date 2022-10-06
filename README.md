@@ -8,13 +8,13 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Metteur](#metteur)
-  - [Terminology](#terminology)
   - [Configuration](#configuration)
     - [Configuration: `split`](#configuration-split)
   - [16-page Booklet](#16-page-booklet)
   - [Discussion of Alternative Solutions](#discussion-of-alternative-solutions)
   - [Internals](#internals)
   - [External Dependencies](#external-dependencies)
+  - [Terminology](#terminology)
   - [Literature](#literature)
   - [To Do](#to-do)
   - [Is Done](#is-done)
@@ -25,42 +25,8 @@
 
 # Metteur
 
-## Terminology
+🚧 *not a documentation, yet* 🚧
 
-* **Sheet** (G **Bogen**): the piece of paper to be printed on (in DTP A4 or US Letter most of the time).
-
-* **Recto** (also **obverse**; L **recto**, G **Schön(druck)**): the front side of the Sheet.
-
-* **Verso** (also **reverse**; L **verso**, G **Wider(druck)**): the back side of the Sheet.
-
-* **Leaf** (L **folium**, G **Blatt**): strictly, each pair of odd and even Pages of the bound book;
-  however, often 'pages' is used to refer to a single side of a Leaf or both sides of a Leaf
-  indiscriminately.
-
-* **Page** (L **pagina**, G **Seite**): strictly, the odd or even side of a Leaf, but often used to mean
-  Leaf sensu stricto.
-
-* **Gathering** (also **signature**, **quire**, **section**; G **Lage**, **Falzbogen**): [Symbol **g**] "In
-  bookbinding, a section, gathering, or signature is a group of sheets folded in half, to be worked into the
-  binding as a unit."—([*Wikipedia*](https://en.wikipedia.org/wiki/Section_(bookbinding)))
-
-
-from [*Wikipedia: Bookbinding*](https://en.wikipedia.org/wiki/Bookbinding#Terms_and_techniques):
-
-* A bifolium (often wrongly called a "bifolio", "bi-folio", or even "bifold") is a single sheet folded in
-  half to make two leaves. The plural is "bifolia", not "bifoliums".
-* A section, sometimes called a gathering, or, especially if unprinted, a quire, is a group of bifolia
-  nested together as a single unit. In a completed book, each quire is sewn through its fold. Depending on
-  how many bifolia a quire is made of, it could be called:
-  * duernion – two bifolia, producing four leaves;
-  * ternion – three bifolia, producing six leaves;
-  * quaternion – four bifolia, producing eight leaves;
-  * quinternion – five bifolia, producing ten leaves;
-  * sextern or sexternion – six bifolia, producing twelve leaves.
-
-* In bookbinding, a section, gathering, or signature is a group of sheets folded in half, to be worked into
-  the binding as a unit.—[*Wikipedia: Section
-  (bookbinding)*](https://en.wikipedia.org/wiki/Section_(bookbinding))
 
 ## Configuration
 
@@ -194,6 +160,44 @@ of page `-n`:
 <del>  * in turn, requires NodeJS >= 16.0.0</del>
 <del>  * `pnpm add -g zx`</del>
 <del>  * `npm i -g zx`</del>
+
+
+## Terminology
+
+* **Sheet** (G **Bogen**): the piece of paper to be printed on (in DTP A4 or US Letter most of the time).
+
+* **Recto** (also **obverse**; L **recto**, G **Schön(druck)**): the front side of the Sheet.
+
+* **Verso** (also **reverse**; L **verso**, G **Wider(druck)**): the back side of the Sheet.
+
+* **Leaf** (L **folium**, G **Blatt**): strictly, each pair of odd and even Pages of the bound book;
+  however, often 'pages' is used to refer to a single side of a Leaf or both sides of a Leaf
+  indiscriminately.
+
+* **Page** (L **pagina**, G **Seite**): strictly, the odd or even side of a Leaf, but often used to mean
+  Leaf sensu stricto.
+
+* **Gathering** (also **signature**, **quire**, **section**; G **Lage**, **Falzbogen**): [Symbol **g**] "In
+  bookbinding, a section, gathering, or signature is a group of sheets folded in half, to be worked into the
+  binding as a unit."—([*Wikipedia*](https://en.wikipedia.org/wiki/Section_(bookbinding)))
+
+
+from [*Wikipedia: Bookbinding*](https://en.wikipedia.org/wiki/Bookbinding#Terms_and_techniques):
+
+* A bifolium (often wrongly called a "bifolio", "bi-folio", or even "bifold") is a single sheet folded in
+  half to make two leaves. The plural is "bifolia", not "bifoliums".
+* A section, sometimes called a gathering, or, especially if unprinted, a quire, is a group of bifolia
+  nested together as a single unit. In a completed book, each quire is sewn through its fold. Depending on
+  how many bifolia a quire is made of, it could be called:
+  * duernion – two bifolia, producing four leaves;
+  * ternion – three bifolia, producing six leaves;
+  * quaternion – four bifolia, producing eight leaves;
+  * quinternion – five bifolia, producing ten leaves;
+  * sextern or sexternion – six bifolia, producing twelve leaves.
+
+* In bookbinding, a section, gathering, or signature is a group of sheets folded in half, to be worked into
+  the binding as a unit.—[*Wikipedia: Section
+  (bookbinding)*](https://en.wikipedia.org/wiki/Section_(bookbinding))
 
 ## Literature
 
