@@ -29,25 +29,26 @@
 
 <dl>
 
-  <dt>*Sheet* (L *???*, G *Bogen*)</dt><dd>the piece of paper to be printed on (in DTP A4 or US Letter most
-  of the time).</dd>
+<dt>*Sheet* (L *???*, G *Bogen*)</dt><dd>the piece of paper to be printed on (in DTP A4 or US Letter most
+of the time).</dd>
 
-  <dt>*Recto* (also *obverse*; L *recto*, G *Schön(druck)*)</dt><dd>the front side of the Sheet.</dd>
+<dt>*Recto* (also *obverse*; L *recto*, G *Schön(druck)*)</dt><dd>the front side of the Sheet.</dd>
 
-  <dt>*Verso* (also *reverse*; L *verso*, G *Wider(druck)*)</dt><dd>the back side of the Sheet.</dd>
+<dt>*Verso* (also *reverse*; L *verso*, G *Wider(druck)*)</dt><dd>the back side of the Sheet.</dd>
 
-  <dt>*Leaf* (L *folium*, G *Blatt*)</dt><dd>strictly, each pair of odd and even Pages of the bound book;
-  however, often 'pages' is used to refer to a single side of a Leaf or both sides of a Leaf
-  indiscriminately.</dd>
+<dt>*Leaf* (L *folium*, G *Blatt*)</dt><dd>strictly, each pair of odd and even Pages of the bound book;
+however, often 'pages' is used to refer to a single side of a Leaf or both sides of a Leaf
+indiscriminately.</dd>
 
-  <dt>*Page* (L *pagina*, G *Seite*)</dt><dd>strictly, the odd or even side of a Leaf, but often used to
-  mean Leaf sensu stricto.</dd>
+<dt>*Page* (L *pagina*, G *Seite*)</dt><dd>strictly, the odd or even side of a Leaf, but often used to
+mean Leaf sensu stricto.</dd>
 
-  <dt>*Gathering* (also *signature*, *quire*, *section*; G *Lage*, *Falzbogen*)</dt><dd>[Symbol **g**] "In
-  bookbinding, a section, gathering, or signature is a group of sheets folded in half, to be worked into the
-  binding as a unit."—([*Wikipedia*](https://en.wikipedia.org/wiki/Section_(bookbinding)))</dd>
+<dt>*Gathering* (also *signature*, *quire*, *section*; G *Lage*, *Falzbogen*)</dt><dd>[Symbol **g**] "In
+bookbinding, a section, gathering, or signature is a group of sheets folded in half, to be worked into the
+binding as a unit."—([*Wikipedia*](https://en.wikipedia.org/wiki/Section_(bookbinding)))</dd>
 
-  </dl>
+</dl>
+
 
 from [*Wikipedia: Bookbinding*](https://en.wikipedia.org/wiki/Bookbinding#Terms_and_techniques):
 
