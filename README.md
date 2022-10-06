@@ -15,6 +15,7 @@
   - [Discussion of Alternative Solutions](#discussion-of-alternative-solutions)
   - [Internals](#internals)
   - [External Dependencies](#external-dependencies)
+  - [Literature](#literature)
   - [To Do](#to-do)
   - [Is Done](#is-done)
 
@@ -28,19 +29,23 @@
 
 <dl>
 
-  <dt>*Sheet*</dt><dd>(L *???*, G *Bogen*) the piece of paper to be printed on (in DTP A4 or US Letter most
+  <dt>*Sheet* (L *???*, G *Bogen*)</dt><dd>the piece of paper to be printed on (in DTP A4 or US Letter most
   of the time).</dd>
 
-  <dt>*Recto*</dt><dd>(also *obverse*; L *recto*, G *Schön(druck)*) the front side of the Sheet.</dd>
+  <dt>*Recto* (also *obverse*; L *recto*, G *Schön(druck)*)</dt><dd>the front side of the Sheet.</dd>
 
-  <dt>*Verso*</dt><dd>(also *reverse*; L *verso*, G *Wider(druck)*) the back side of the Sheet.</dd>
+  <dt>*Verso* (also *reverse*; L *verso*, G *Wider(druck)*)</dt><dd>the back side of the Sheet.</dd>
 
-  <dt>*Leaf*</dt><dd>(L *folium*, G *Blatt*) strictly, each pair of odd and even Pages of the bound book;
+  <dt>*Leaf* (L *folium*, G *Blatt*)</dt><dd>strictly, each pair of odd and even Pages of the bound book;
   however, often 'pages' is used to refer to a single side of a Leaf or both sides of a Leaf
   indiscriminately.</dd>
 
-  <dt>*Page*</dt><dd>(L *pagina*, G *Seite*) strictly, the odd or even side of a Leaf, but often used to
+  <dt>*Page* (L *pagina*, G *Seite*)</dt><dd>strictly, the odd or even side of a Leaf, but often used to
   mean Leaf sensu stricto.</dd>
+
+  <dt>*Gathering* (also *signature*, *quire*, *section*; G *Lage*, *Falzbogen*)</dt><dd>[Symbol **g**] "In
+  bookbinding, a section, gathering, or signature is a group of sheets folded in half, to be worked into the
+  binding as a unit."—([*Wikipedia*](https://en.wikipedia.org/wiki/Section_(bookbinding)))</dd>
 
   </dl>
 
@@ -193,6 +198,10 @@ of page `-n`:
 <del>  * in turn, requires NodeJS >= 16.0.0</del>
 <del>  * `pnpm add -g zx`</del>
 <del>  * `npm i -g zx`</del>
+
+## Literature
+
+* [Wikipedia *Section (bookbinding)*](https://en.wikipedia.org/wiki/Section_(bookbinding))
 
 ## To Do
 
