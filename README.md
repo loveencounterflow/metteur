@@ -47,6 +47,10 @@ mean Leaf sensu stricto.</dd>
 bookbinding, a section, gathering, or signature is a group of sheets folded in half, to be worked into the
 binding as a unit."—([*Wikipedia*](https://en.wikipedia.org/wiki/Section_(bookbinding)))</dd>
 
+*Gathering* (also *signature*, *quire*, *section*; G *Lage*, *Falzbogen*)</dt><dd>[Symbol **g**] "In
+bookbinding, a section, gathering, or signature is a group of sheets folded in half, to be worked into the
+binding as a unit."—([*Wikipedia*](https://en.wikipedia.org/wiki/Section_(bookbinding)))
+
 </dl>
 
 
