@@ -27,31 +27,22 @@
 
 ## Terminology
 
-<dl>
+* **Sheet** (G **Bogen**): the piece of paper to be printed on (in DTP A4 or US Letter most of the time).
 
-<dt>*Sheet* (L *???*, G *Bogen*)</dt><dd>the piece of paper to be printed on (in DTP A4 or US Letter most
-of the time).</dd>
+* **Recto** (also **obverse**; L **recto**, G **Schön(druck)**): the front side of the Sheet.
 
-<dt>*Recto* (also *obverse*; L *recto*, G *Schön(druck)*)</dt><dd>the front side of the Sheet.</dd>
+* **Verso** (also **reverse**; L **verso**, G **Wider(druck)**): the back side of the Sheet.
 
-<dt>*Verso* (also *reverse*; L *verso*, G *Wider(druck)*)</dt><dd>the back side of the Sheet.</dd>
+* **Leaf** (L **folium**, G **Blatt**): strictly, each pair of odd and even Pages of the bound book;
+  however, often 'pages' is used to refer to a single side of a Leaf or both sides of a Leaf
+  indiscriminately.
 
-<dt>*Leaf* (L *folium*, G *Blatt*)</dt><dd>strictly, each pair of odd and even Pages of the bound book;
-however, often 'pages' is used to refer to a single side of a Leaf or both sides of a Leaf
-indiscriminately.</dd>
+* **Page** (L **pagina**, G **Seite**): strictly, the odd or even side of a Leaf, but often used to mean
+  Leaf sensu stricto.
 
-<dt>*Page* (L *pagina*, G *Seite*)</dt><dd>strictly, the odd or even side of a Leaf, but often used to
-mean Leaf sensu stricto.</dd>
-
-<dt>*Gathering* (also *signature*, *quire*, *section*; G *Lage*, *Falzbogen*)</dt><dd>[Symbol **g**] "In
-bookbinding, a section, gathering, or signature is a group of sheets folded in half, to be worked into the
-binding as a unit."—([*Wikipedia*](https://en.wikipedia.org/wiki/Section_(bookbinding)))</dd>
-
-*Gathering* (also *signature*, *quire*, *section*; G *Lage*, *Falzbogen*)</dt><dd>[Symbol **g**] "In
-bookbinding, a section, gathering, or signature is a group of sheets folded in half, to be worked into the
-binding as a unit."—([*Wikipedia*](https://en.wikipedia.org/wiki/Section_(bookbinding)))
-
-</dl>
+* **Gathering** (also **signature**, **quire**, **section**; G **Lage**, **Falzbogen**): [Symbol **g**] "In
+  bookbinding, a section, gathering, or signature is a group of sheets folded in half, to be worked into the
+  binding as a unit."—([*Wikipedia*](https://en.wikipedia.org/wiki/Section_(bookbinding)))
 
 
 from [*Wikipedia: Bookbinding*](https://en.wikipedia.org/wiki/Bookbinding#Terms_and_techniques):
