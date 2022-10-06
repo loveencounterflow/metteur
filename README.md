@@ -16,6 +16,7 @@
   - [External Dependencies](#external-dependencies)
   - [Terminology](#terminology)
   - [Literature](#literature)
+  - [Licenses](#licenses)
   - [To Do](#to-do)
   - [Is Done](#is-done)
 
@@ -194,6 +195,14 @@ from [*Wikipedia: Bookbinding*](https://en.wikipedia.org/wiki/Bookbinding#Terms_
 ## Literature
 
 * [Wikipedia *Section (bookbinding)*](https://en.wikipedia.org/wiki/Section_(bookbinding))
+
+## Licenses
+
+* Thanks to [Georg Duffner](www.georgduffner.at/ebgaramond) for his great
+  [EB-Garamond](https://github.com/georgd/EB-Garamond) font, parts of which are included in the present
+  work, in accordance with the [Open Font
+  License](https://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL)
+
 
 ## To Do
 
