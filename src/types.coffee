@@ -246,15 +246,15 @@ known_layouts =
     # pps:      16 ### TAINT should not have to be set explicitly; pending implementation of Intertype `prepare()` ###
     recto:
       angles: [
-        [ -90, -90, -90, -90, ]       # column 1 (left)
-        [ +90, +90, +90, +90, ] ]     # column 2 (right)
+        [ +90, +90, +90, +90, ]       # column 1 (left)
+        [ -90, -90, -90, -90, ] ]     # column 2 (right)
       pages: [
         [  4, 13, 16,  1, ]     # column 1 (left)
         [  5, 12,  9,  8, ] ]   # column 2 (right)
     verso:
       angles: [
-        [ -90, -90, -90, -90, ]       # column 1 (left)
-        [ +90, +90, +90, +90, ] ]     # column 2 (right)
+        [ +90, +90, +90, +90, ]       # column 1 (left)
+        [ -90, -90, -90, -90, ] ]     # column 2 (right)
       pages: [
         [  6, 11, 10,  7, ]     # column 1 (left)
         [  3, 14, 15,  2, ] ]   # column 2 (right)
