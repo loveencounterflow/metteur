@@ -13,8 +13,8 @@ GUY                       = require 'guy'
   help }                  = GUY.trm.get_loggers 'METTEUR'
 { rpr
   echo }                  = GUY.trm
-PATH                      = require 'path'
-FS                        = require 'fs'
+PATH                      = require 'node:path'
+FS                        = require 'node:fs'
 resolve                   = ( P... ) -> PATH.resolve PATH.join __dirname, '..', P...
 H                         = require './helpers'
 types                     = require './types'
