@@ -17,6 +17,7 @@ GUY                       = require 'guy'
 PATH                      = require 'node:path'
 FS                        = require 'fs-extra'
 CP                        = require 'node:child_process'
+H                         = require './helpers'
 types                     = require './types'
 { isa
   validate }              = types

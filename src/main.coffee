@@ -16,6 +16,7 @@ GUY                       = require 'guy'
 PATH                      = require 'path'
 FS                        = require 'fs'
 resolve                   = ( P... ) -> PATH.resolve PATH.join __dirname, '..', P...
+H                         = require './helpers'
 types                     = require './types'
 { isa }                   = types
 { Template }              = require './metteur-templating'
