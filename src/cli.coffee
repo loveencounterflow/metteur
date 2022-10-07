@@ -99,20 +99,38 @@ show_cfg = ( cfg ) ->
   return null
 
 #-----------------------------------------------------------------------------------------------------------
-fetch_pagecount = ( cfg ) ->
+fetch_pdf_info = ( cfg ) ->
   await import( 'zx/globals' )
   verbose       = $.verbose; $.verbose = false
   pdfinfo_path  = await path_from_executable_name 'pdfinfo'
-  R             = ( await $"#{pdfinfo_path} #{cfg.input} | grep -Pi '^Pages:'" ).stdout.trim()
-  R             = R.replace /^.*\s+(\d+)$/, "$1"
-  R             = parseInt R, 10
-  $.verbose     = verbose
-  info '^690-1^', "PDF #{cfg.input} has #{R} pages"
+  stdout        = ( await $"#{pdfinfo_path} #{cfg.input}" ).stdout.trim()
+  R             = {}
+  #.........................................................................................................
+  for line in stdout.split /\n/
+    continue unless ( match = line.match /^(?<key>[^:]+):\s*(?<value>.*)$/ )?
+    key   = match.groups.key.toLowerCase()
+    value = match.groups.value
+    switch key
+      when 'pages'
+        R.pagecount = parseInt value, 10
+      when 'page size'
+        unless ( submatch = value.match /(?<page_width>[\d.]+)\s*x\s*(?<page_height>[\d.]+)\s*pts/ )?
+          warn "^33847^ unable to parse #{rpr line}"
+          R.page_width  = 210
+          R.page_height = 297
+          continue
+        R.page_width  = H.mm_from_pt parseFloat submatch.groups.page_width
+        R.page_height = H.mm_from_pt parseFloat submatch.groups.page_height
+      else
+        null
+  #.........................................................................................................
+  $.verbose = verbose
+  info '^690-1^', "PDF: #{rpr R}"
   return R
 
 #-----------------------------------------------------------------------------------------------------------
 fetch_pagedistro = ( cfg ) ->
-  cfg.pagecount       = await fetch_pagecount cfg
+  Object.assign cfg, await fetch_pdf_info cfg
   cfg.sheetcount      = cfg.pagecount // cfg.layout.pps
   remainder           = cfg.pagecount %% cfg.layout.pps
   cfg.sheetcount++ if remainder isnt 0
