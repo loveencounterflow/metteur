@@ -216,12 +216,12 @@ known_layouts =
     # pps:      8 ### TAINT should not have to be set explicitly; pending implementation of Intertype `prepare()` ###
     recto:
       angles: [
-        [ -90, -90 ] ]
+        [ +90, +90 ] ]
       pages: [
         [  4, 1, ] ]
     verso:
       angles: [
-        [ +90, +90 ] ]
+        [ -90, -90 ] ]
       pages: [
         [  3, 2, ] ]
   pps8:
