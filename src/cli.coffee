@@ -38,21 +38,18 @@ resolve = ( P... ) ->
 
 #-----------------------------------------------------------------------------------------------------------
 run_tex_etc = ( cfg ) ->
-  await GUY.temp.with_directory { keep: false, }, ({ path }) ->
-    cfg.tex_working_path  = path
-    cfg.tex_target_path   = resolve cfg.tex_working_path, 'booklet.tex'
-    cfg.tex_pdf_path      = resolve cfg.tex_working_path, 'booklet.pdf'
-    FS.writeFileSync cfg.tex_target_path, cfg.imposition
-    whisper "wrote imposition to #{cfg.tex_target_path}"
-    await _run_tex cfg
-    if FS.pathExistsSync cfg.tex_pdf_path
-      FS.moveSync cfg.tex_pdf_path, cfg.output, { overwrite: cfg.overwrite, }
-      help "wrote output to #{cfg.output}"
-    else
-      warn GUY.trm.reverse " ^metteur/cli@34^ no output produced "
-      process.exit 1
-    return null
-  return cfg
+  cfg.tex_target_path   = resolve cfg.tex_working_path, 'booklet.tex'
+  cfg.tex_pdf_path      = resolve cfg.tex_working_path, 'booklet.pdf'
+  FS.writeFileSync cfg.tex_target_path, cfg.imposition
+  whisper "wrote imposition to #{cfg.tex_target_path}"
+  await _run_tex cfg
+  if FS.pathExistsSync cfg.tex_pdf_path
+    FS.moveSync cfg.tex_pdf_path, cfg.output, { overwrite: cfg.overwrite, }
+    help "wrote output to #{cfg.output}"
+  else
+    warn GUY.trm.reverse " ^metteur/cli@34^ no output produced "
+    process.exit 1
+  return null
 
 #-----------------------------------------------------------------------------------------------------------
 new_hash          = -> ( require 'crypto' ).createHash 'sha1'
@@ -194,17 +191,21 @@ fetch_pagedistro = ( cfg ) ->
         description:  "assemble pages from one PDF file into a new PDF, to be folded into a booklet"
         runner: ( d ) =>
           cfg             = types.create.mtr_impose_cfg d.verdict.parameters
-          ### TAINT inconsistent naming ###
-          cfg.mtr_split   = types.data.mtr_split
-          cfg.input       = resolve cfg.input
-          cfg.output      = resolve cfg.output
-          cfg.pagedistro  = await fetch_pagedistro cfg
-          debug '^3553^', { pagedistro: cfg.pagedistro, }
-          show_cfg cfg
-          mtr             = new Metteur()
-          cfg.imposition  = mtr._impose cfg
-          # process.exit 111
-          await run_tex_etc cfg
+          # await GUY.temp.with_directory { keep: true, }, ({ path }) ->
+          do ( path = '/tmp/guy.temp--12229-ZUjUOVQEIZXI' ) ->
+            cfg.tex_working_path  = path
+            cfg.mtr_split         = types.data.mtr_split
+            cfg.input             = resolve cfg.input
+            cfg.output            = resolve cfg.output
+            cfg.pagedistro        = await fetch_pagedistro cfg
+            cfg.sig_pdf_path      = resolve cfg.tex_working_path, 'signatures.pdf'
+            debug '^3553^', { pagedistro: cfg.pagedistro, }
+            show_cfg cfg
+            mtr                   = new Metteur()
+            cfg.imposition        = await mtr._impose cfg
+            # process.exit 111
+            await run_tex_etc cfg
+            return null
           return null
         flags:
           'layout':

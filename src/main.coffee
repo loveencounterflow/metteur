@@ -26,11 +26,14 @@ types                     = require './types'
 { freeze }                = GUY.lft
 # { equals }                = types
 # { HDML }                  = require 'hdml'
+{ PDFDocument }           = require 'pdf-lib'
+fontkit                   = require '@pdf-lib/fontkit'
 page_tpl                  = """
   \\begin{tikzpicture}[overlay,remember picture]%
   \\node[anchor=north west,xshift=❰xshift❱mm,yshift=❰yshift❱mm] at (current page.north west){%
     \\rotatebox{❰angle_ccw❱}{%
-    \\fbox{\\includegraphics[width=❰page_width❱mm,height=❰page_height❱mm,page=❰page_nr❱]{❰source_path❱}}}};%
+    \\fbox{\\includegraphics[width=❰page_width❱mm,height=❰page_height❱mm,page=❰page_nr❱]{❰source_path❱}};%
+    \\fbox{\\includegraphics[width=❰page_width❱mm,height=❰page_height❱mm,page=❰page_nr❱]{❰sig_pdf_path❱}}}};%
     \\end{tikzpicture}% sheet ❰sheet_nr❱ ❰side_name❱ col ❰column_nr❱ row ❰slot_nr❱, pos ❰slot_map❱, p❰page_nr❱ ↷ ❰angle_cw❱°\n"""
 
 
@@ -49,6 +52,7 @@ class Metteur extends GUY.props.Strict_owner
 
   #---------------------------------------------------------------------------------------------------------
   _impose: ( cfg ) ->
+    await @_generate_signatures cfg
     doc_tpl_path    = resolve 'tex/booklet.template.tex'
     doc_tpl         = FS.readFileSync doc_tpl_path, { encoding: 'utf-8', }
     format          = ( x ) -> if isa.text x then x else rpr x
@@ -83,6 +87,7 @@ class Metteur extends GUY.props.Strict_owner
       angle_cw:         Template.misfit
       angle_ccw:        Template.misfit
       source_path:      cfg.input
+      sig_pdf_path:     cfg.sig_pdf_path
       correction:       { x: -2, y: +1.5, }
     #.......................................................................................................
     Q.column_count  = cfg.layout.recto.pages.length
@@ -121,6 +126,8 @@ class Metteur extends GUY.props.Strict_owner
             Q.yshift      = ( -Q.row_height    * Q.slot_idx    ) + Q.correction.y
             #...............................................................................................
             urge '^234^', "sheet #{Q.sheet_nr} #{Q.side_name} slot c#{Q.column_idx + 1},s#{Q.slot_idx + 1}, pos #{Q.slot_map}, p#{Q.page_nr} ↷ #{Q.angle_cw}"
+            debug '^2334^', Q.source_path
+            debug '^2334^', Q.sig_pdf_path
             page_tpl.fill_all Q
             doc_tpl.fill_some { content: page_tpl.finish(), }
     doc_tpl.fill_some { frame_weight: Q.frame_weight, }
@@ -128,6 +135,28 @@ class Metteur extends GUY.props.Strict_owner
     #.......................................................................................................
     return doc_tpl.finish()
 
+  #---------------------------------------------------------------------------------------------------------
+  _generate_signatures: ( cfg ) ->
+    font_path = PATH.join __dirname, '../fonts/EBGaramond08-Regular.ttf'
+    doc       = await PDFDocument.create()
+    #.......................................................................................................
+    fontBytes = FS.readFileSync font_path
+    doc.registerFontkit fontkit
+    font      = await doc.embedFont fontBytes
+    width     = H.pt_from_mm cfg.page_width
+    height    = H.pt_from_mm cfg.page_height
+    pnr = 0
+    #.......................................................................................................
+    for _ in cfg.pagedistro
+      pnr++
+      page      = doc.addPage [ width, height, ]
+      size      = H.pt_from_mm 10
+      x         = H.pt_from_mm 10
+      y         = H.pt_from_mm 10
+      page.drawText "p#{pnr}", { font, x, y, size, }
+    #.......................................................................................................
+    FS.writeFileSync cfg.sig_pdf_path, await doc.save()
+    return null
 
 
 #===========================================================================================================
