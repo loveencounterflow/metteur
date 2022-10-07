@@ -32,20 +32,6 @@ page_tpl                  = """
     \\rotatebox{❰angle_ccw❱}{%
     \\fbox{\\includegraphics[width=❰page_width❱mm,height=❰page_height❱mm,page=❰page_nr❱]{❰source_path❱}}}};%
     \\end{tikzpicture}% sheet ❰sheet_nr❱ ❰side_name❱ col ❰column_nr❱ row ❰slot_nr❱, pos ❰slot_map❱, p❰page_nr❱ ↷ ❰angle_cw❱°\n"""
-signature_tpl             = """
-  \\begin{tikzpicture}[overlay,remember picture]%
-  \\node[anchor=north west,xshift=+0mm,yshift=+30mm] at (current page.south west){%
-    \\rotatebox{0}{%
-    \\fbox{{\\fontsize{42}{42}\\selectfont ❰sig_txt❱}}}};%
-    \\end{tikzpicture}% Signature sheet ❰sheet_nr❱ ❰side_name❱ col ❰column_nr❱ row ❰slot_nr❱, pos ❰slot_map❱, p❰page_nr❱ ↷ ❰angle_cw❱°\n
-
-  \\begin{tikzpicture}[overlay,remember picture]%
-  \\node[anchor=north west,xshift=+0mm,yshift=+30mm] at (current page.south west){%
-    \\rotatebox[origin=bl]{10}{%
-    \\fbox{{\\fontsize{42}{42}\\selectfont ❰sig_txt❱}}}};%
-    \\end{tikzpicture}% Signature sheet ❰sheet_nr❱ ❰side_name❱ col ❰column_nr❱ row ❰slot_nr❱, pos ❰slot_map❱, p❰page_nr❱ ↷ ❰angle_cw❱°\n
-
-    """
 
 
 
@@ -68,7 +54,6 @@ class Metteur extends GUY.props.Strict_owner
     format          = ( x ) -> if isa.text x then x else rpr x
     doc_tpl         = new Template { template: doc_tpl,       open: '❰', close: '❱', format, }
     page_tpl        = new Template { template: page_tpl,      open: '❰', close: '❱', format, }
-    signature_tpl   = new Template { template: signature_tpl, open: '❰', close: '❱', format, }
     #.......................................................................................................
     Q               = new GUY.props.Strict_owner seal: true, target:
       # frame_weight:     '0.25mm'
@@ -135,12 +120,6 @@ class Metteur extends GUY.props.Strict_owner
             Q.xshift      = (  Q.column_width  * Q.column_idx  ) + Q.correction.x
             Q.yshift      = ( -Q.row_height    * Q.slot_idx    ) + Q.correction.y
             #...............................................................................................
-            if Q.slot_map is 1
-              info "Signature"
-              Q.sig_txt = "[signature #{Q.sheet_nr}]"
-              signature_tpl.fill_all Q
-              doc_tpl.fill_some { content: signature_tpl.finish(), }
-            #...............................................................................................
             urge '^234^', "sheet #{Q.sheet_nr} #{Q.side_name} slot c#{Q.column_idx + 1},s#{Q.slot_idx + 1}, pos #{Q.slot_map}, p#{Q.page_nr} ↷ #{Q.angle_cw}"
             page_tpl.fill_all Q
             doc_tpl.fill_some { content: page_tpl.finish(), }
@@ -150,16 +129,8 @@ class Metteur extends GUY.props.Strict_owner
     return doc_tpl.finish()
 
 
-#-----------------------------------------------------------------------------------------------------------
-demo = ->
-  mtr = new Metteur()
-  mtr.impose()
-  return null
 
 #===========================================================================================================
-module.exports = { Template, Metteur, demo, }
+module.exports = { Template, Metteur, }
 
 
-############################################################################################################
-if module is require.main then do =>
-  await demo()
