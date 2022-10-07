@@ -221,7 +221,6 @@ from [*Wikipedia: Bookbinding*](https://en.wikipedia.org/wiki/Bookbinding#Terms_
     LaTeX*](https://ctan.mc1.root.project-creative.net/macros/latex/contrib/booklet/booklet.pdf) for different
   * **[–]** row and column counts (see `nup` argument in [*Creating Pocket-sized Books Using
     LATEX*](https://tug.org/pracjourn/2006-3/venugopal-pocketbook/venugopal-pocketbook.pdf))
-* **[–]** support signatures so that several sheets can be bound into a quire (section)
 * **[–]** implement G. *Bundzuwachs*, the amount of whitespace to be added to the gutter to account for fold
   thickness; see [*Booklets erzeugen*](https://tobiw.de/tbdm/booklets-erzeugen)
 * **[–]** implement `--pages` CLI argument to select which pages whould be taken from source in which order;
@@ -229,6 +228,9 @@ from [*Wikipedia: Bookbinding*](https://en.wikipedia.org/wiki/Bookbinding#Terms_
   as ranges (use `..` for those to avoid conflict with minus sign)
 * **[–]** consider to notate layouts in terms of rows instead of columns; this allows ro mimick the
   geometric arrangement in the notation for easier reference
+* **[–]** support signatures so that several sheets can be bound into a quire (section)
+* **[–]** provide both over- and underlays (which could hold such items as graphic for page background,
+  signatures, page numbers)
 
 
 ## Is Done
