@@ -42,7 +42,7 @@ page_tpl                  = """
   \\begin{tikzpicture}[overlay,remember picture]%
   \\node[anchor=north west,xshift=❰xshift❱mm,yshift=❰yshift❱mm] at (current page.north west){%
     \\rotatebox{❰angle_ccw❱}{%
-    \\includegraphics[width=❰page_width❱mm,height=❰page_height❱mm,page=❰page_nr❱]{❰ovl_path❱}}};%
+    \\includegraphics[width=❰page_width❱mm,height=❰page_height❱mm,page=❰pos_nr❱]{❰ovl_path❱}}};%
     \\end{tikzpicture}% sheet ❰sheet_nr❱ ❰side_name❱ col ❰column_nr❱ row ❰slot_nr❱, pos ❰slot_map❱, p❰page_nr❱ ↷ ❰angle_cw❱°\n
     """
 
@@ -88,6 +88,7 @@ class Metteur extends GUY.props.Strict_owner
       sheet_nr:         0
       page_nr:          Template.misfit
       page_idx:         Template.misfit
+      pos_nr:           Template.misfit
       slot_map:         Template.misfit
       slot_idx:         Template.misfit
       slot_nr:          Template.misfit
@@ -129,6 +130,7 @@ class Metteur extends GUY.props.Strict_owner
             Q.angle_cw    = Q.angles[ _slot_idx ]
             Q.angle_ccw   = -Q.angle_cw ### NOTE converting from anti-clockwise to clockwise ###
             pdistro_idx   = ( Q.sheet_nr - 1 ) * cfg.layout.pps + Q.slot_map - 1
+            Q.pos_nr      = pdistro_idx + 1
             Q.page_nr     = cfg.pagedistro[ pdistro_idx ] ? -1 ### NOTE: using -1 as error code ###
             Q.xshift      = (  Q.column_width  * Q.column_idx  ) + Q.correction.x
             Q.yshift      = ( -Q.row_height    * Q.slot_idx    ) + Q.correction.y
@@ -148,18 +150,21 @@ class Metteur extends GUY.props.Strict_owner
     #.......................................................................................................
     fontBytes = FS.readFileSync font_path
     doc.registerFontkit fontkit
-    font      = await doc.embedFont fontBytes
+    font      = await doc.embedFont fontBytes, { subset: true, features: {
+      lnum: true,
+      liga: true,
+      dlig: true, }, }
     width     = H.pt_from_mm cfg.page_width
     height    = H.pt_from_mm cfg.page_height
     pnr = 0
     #.......................................................................................................
-    for _ in cfg.pagedistro
-      pnr++
+    poscount = cfg.layout.pps * cfg.sheetcount
+    for pos_nr in [ 1 .. poscount ]
       page      = doc.addPage [ width, height, ]
       size      = H.pt_from_mm 10
       x         = H.pt_from_mm 10
       y         = H.pt_from_mm 10
-      page.drawText "p#{pnr}", { font, x, y, size, }
+      page.drawText "pos #{pos_nr}", { font, x, y, size, }
     #.......................................................................................................
     FS.writeFileSync cfg.ovl_path, await doc.save()
     return null
