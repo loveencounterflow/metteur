@@ -198,7 +198,7 @@ fetch_pagedistro = ( cfg ) ->
             cfg.input             = resolve cfg.input
             cfg.output            = resolve cfg.output
             cfg.pagedistro        = await fetch_pagedistro cfg
-            cfg.sig_pdf_path      = resolve cfg.tex_working_path, 'signatures.pdf'
+            cfg.ovl_path          = resolve cfg.tex_working_path, 'overlay.pdf'
             debug '^3553^', { pagedistro: cfg.pagedistro, }
             show_cfg cfg
             mtr                   = new Metteur()

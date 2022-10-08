@@ -37,7 +37,7 @@ page_tpl                  = """
   \\begin{tikzpicture}[overlay,remember picture]%
   \\node[anchor=north west,xshift=❰xshift❱mm,yshift=❰yshift❱mm] at (current page.north west){%
     \\rotatebox{❰angle_ccw❱}{%
-    \\fbox{\\includegraphics[width=❰page_width❱mm,height=❰page_height❱mm,page=❰page_nr❱]{❰sig_pdf_path❱}}}};%
+    \\fbox{\\includegraphics[width=❰page_width❱mm,height=❰page_height❱mm,page=❰page_nr❱]{❰ovl_path❱}}}};%
     \\end{tikzpicture}% sheet ❰sheet_nr❱ ❰side_name❱ col ❰column_nr❱ row ❰slot_nr❱, pos ❰slot_map❱, p❰page_nr❱ ↷ ❰angle_cw❱°\n
     """
 
@@ -55,7 +55,7 @@ class Metteur extends GUY.props.Strict_owner
 
   #---------------------------------------------------------------------------------------------------------
   _impose: ( cfg ) ->
-    await @_generate_signatures cfg
+    await @_generate_overlay cfg
     doc_tpl_path    = resolve 'tex/booklet.template.tex'
     doc_tpl         = FS.readFileSync doc_tpl_path, { encoding: 'utf-8', }
     format          = ( x ) -> if isa.text x then x else rpr x
@@ -86,11 +86,10 @@ class Metteur extends GUY.props.Strict_owner
       slot_map:         Template.misfit
       slot_idx:         Template.misfit
       slot_nr:          Template.misfit
-      sig_txt:          Template.misfit
       angle_cw:         Template.misfit
       angle_ccw:        Template.misfit
       source_path:      cfg.input
-      sig_pdf_path:     cfg.sig_pdf_path
+      ovl_path:         cfg.ovl_path
       correction:       { x: -2, y: +1.5, }
     #.......................................................................................................
     Q.column_count  = cfg.layout.recto.pages.length
@@ -137,7 +136,7 @@ class Metteur extends GUY.props.Strict_owner
     return doc_tpl.finish()
 
   #---------------------------------------------------------------------------------------------------------
-  _generate_signatures: ( cfg ) ->
+  _generate_overlay: ( cfg ) ->
     font_path = PATH.join __dirname, '../fonts/EBGaramond08-Regular.ttf'
     doc       = await PDFDocument.create()
     #.......................................................................................................
@@ -156,7 +155,7 @@ class Metteur extends GUY.props.Strict_owner
       y         = H.pt_from_mm 10
       page.drawText "p#{pnr}", { font, x, y, size, }
     #.......................................................................................................
-    FS.writeFileSync cfg.sig_pdf_path, await doc.save()
+    FS.writeFileSync cfg.ovl_path, await doc.save()
     return null
 
 
