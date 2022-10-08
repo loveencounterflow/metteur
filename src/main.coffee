@@ -29,21 +29,22 @@ types                     = require './types'
 { PDFDocument }           = require 'pdf-lib'
 fontkit                   = require '@pdf-lib/fontkit'
 page_tpl                  = """
+  %-------------------------------------------------------------------------------------------------------------------------------------------------------
   \\begin{tikzpicture}[overlay,remember picture]%
   \\node[anchor=north west,xshift=❰xshift❱mm,yshift=❰yshift❱mm] at (current page.north west){%
     \\rotatebox{❰angle_ccw❱}{%
     \\includegraphics[width=❰page_width❱mm,height=❰page_height❱mm,page=❰page_nr❱]{❰bdp_path❱}}};%
-    \\end{tikzpicture}% sheet ❰sheet_nr❱ ❰side_name❱ col ❰column_nr❱ row ❰slot_nr❱, pos ❰slot_map❱, p❰page_nr❱ ↷ ❰angle_cw❱°\n
+    \\end{tikzpicture}% sheet ❰sheet_nr❱ ❰side_name❱ col ❰column_nr❱ row ❰slot_nr❱, pos ❰slot_map❱, p❰page_nr❱ ↷ ❰angle_cw❱°
   \\begin{tikzpicture}[overlay,remember picture]%
   \\node[anchor=north west,xshift=❰xshift❱mm,yshift=❰yshift❱mm] at (current page.north west){%
     \\rotatebox{❰angle_ccw❱}{%
     \\fbox{\\includegraphics[width=❰page_width❱mm,height=❰page_height❱mm,page=❰page_nr❱]{❰source_path❱}}}};%
-    \\end{tikzpicture}% sheet ❰sheet_nr❱ ❰side_name❱ col ❰column_nr❱ row ❰slot_nr❱, pos ❰slot_map❱, p❰page_nr❱ ↷ ❰angle_cw❱°\n
+    \\end{tikzpicture}% sheet ❰sheet_nr❱ ❰side_name❱ col ❰column_nr❱ row ❰slot_nr❱, pos ❰slot_map❱, p❰page_nr❱ ↷ ❰angle_cw❱°
   \\begin{tikzpicture}[overlay,remember picture]%
   \\node[anchor=north west,xshift=❰xshift❱mm,yshift=❰yshift❱mm] at (current page.north west){%
     \\rotatebox{❰angle_ccw❱}{%
     \\includegraphics[width=❰page_width❱mm,height=❰page_height❱mm,page=❰pos_nr❱]{❰ovl_path❱}}};%
-    \\end{tikzpicture}% sheet ❰sheet_nr❱ ❰side_name❱ col ❰column_nr❱ row ❰slot_nr❱, pos ❰slot_map❱, p❰page_nr❱ ↷ ❰angle_cw❱°\n
+    \\end{tikzpicture}% sheet ❰sheet_nr❱ ❰side_name❱ col ❰column_nr❱ row ❰slot_nr❱, pos??? ❰pos_nr❱, pos ❰slot_map❱, p❰page_nr❱ ↷ ❰angle_cw❱°\n
     """
 
 #===========================================================================================================
