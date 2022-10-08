@@ -229,13 +229,13 @@ from [*Wikipedia: Bookbinding*](https://en.wikipedia.org/wiki/Bookbinding#Terms_
 * **[–]** consider to notate layouts in terms of rows instead of columns; this allows ro mimick the
   geometric arrangement in the notation for easier reference
 * **[–]** support signatures so that several sheets can be bound into a quire (section)
-* **[–]** provide both over- and underlays (which could hold such items as graphic for page background,
-  signatures, page numbers)
-* **[–]** support CLI parameter for TeX working path to avoid creation of temporary directory
-* **[–]** improve error message for extraneous CLI parameter
+* **[–]** provide both overlays for signatures, page numbers
 
 
 ## Is Done
 
 * **[+]** implement `--help` option for CLI
 * **[+]** do not store layouts in declaration of type `mtr_impose_cfg`
+* **[+]** support CLI parameter for TeX working path to avoid creation of temporary directory
+* **[+]** improve error message for extraneous CLI parameter
+* **[+]** provide backdrops (e.g. for colored paper)
