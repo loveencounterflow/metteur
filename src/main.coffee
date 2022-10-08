@@ -126,8 +126,6 @@ class Metteur extends GUY.props.Strict_owner
             Q.yshift      = ( -Q.row_height    * Q.slot_idx    ) + Q.correction.y
             #...............................................................................................
             urge '^234^', "sheet #{Q.sheet_nr} #{Q.side_name} slot c#{Q.column_idx + 1},s#{Q.slot_idx + 1}, pos #{Q.slot_map}, p#{Q.page_nr} ↷ #{Q.angle_cw}"
-            debug '^2334^', Q.source_path
-            debug '^2334^', Q.sig_pdf_path
             page_tpl.fill_all Q
             doc_tpl.fill_some { content: page_tpl.finish(), }
     doc_tpl.fill_some { frame_weight: Q.frame_weight, }
