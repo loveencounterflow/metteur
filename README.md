@@ -230,6 +230,7 @@ from [*Wikipedia: Bookbinding*](https://en.wikipedia.org/wiki/Bookbinding#Terms_
   geometric arrangement in the notation for easier reference
 * **[–]** support signatures so that several sheets can be bound into a quire (section)
 * **[–]** provide both overlays for signatures, page numbers
+* **[–]** disambiguate the two (?) uses of 'position' in `_impose()`
 
 
 ## Is Done
