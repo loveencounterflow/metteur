@@ -15,6 +15,8 @@ GUY                       = require 'guy'
   echo }                  = GUY.trm
 module.exports            = types = new ( require 'intertype' ).Intertype()
 { declare }               = types
+PATH                      = require 'node:path'
+
 
 #-----------------------------------------------------------------------------------------------------------
 declare.mtr_new_template
@@ -186,6 +188,8 @@ declare.mtr_impose_cfg
   $overwrite:   'boolean'
   $split:       'mtr_split'
   $orientation: 'mtr_orientation'
+  $tempdir:     'optional.nonempty.text'
+  $backdrop:    'optional.nonempty.text'
   $sheet:       'mtr_rectangle'
   $layout:      'mtr_layout'
   isa:          'guy_strict_owner'
@@ -195,6 +199,10 @@ declare.mtr_impose_cfg
     overwrite:    false
     split:        '-0'
     orientation:  'ltr' # or 'rtl' which will invert the orientation of all pages, allowing for CJK, Arabic RTL books
+    tempdir:      null
+    # backdrop:     PATH.join __dirname, '../page-elements/blank.png'
+    # backdrop:     PATH.join __dirname, '../page-elements/diagnostic-overlay.png'
+    backdrop:     PATH.join __dirname, '../page-elements/paper1.jpg'
     sheet:
       width:      '210mm'
       height:     '297mm'

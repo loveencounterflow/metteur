@@ -55,7 +55,7 @@ layout =
 
 ### Configuration: `split`
 
-The `split` paramter allows one to insert blank pages when the source has a pagecount that is not an integer
+The `split` parameter allows one to insert blank pages when the source has a pagecount that is not an integer
 multiple of the signature page count. So for example, when there is a source with 14 pages but one wants to
 produce a booklet of 16 pages, two blank pages have to be inserted, either one page at two locations each or
 two pages at one location. It will often be customary to insert a blank page after the title page and on
@@ -231,6 +231,8 @@ from [*Wikipedia: Bookbinding*](https://en.wikipedia.org/wiki/Bookbinding#Terms_
 * **[–]** support signatures so that several sheets can be bound into a quire (section)
 * **[–]** provide both over- and underlays (which could hold such items as graphic for page background,
   signatures, page numbers)
+* **[–]** support CLI parameter for TeX working path to avoid creation of temporary directory
+* **[–]** improve error message for extraneous CLI parameter
 
 
 ## Is Done

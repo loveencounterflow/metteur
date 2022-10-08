@@ -30,6 +30,7 @@ GUY                       = require 'guy'
 { to_width }              = require 'to-width'
 deep_copy                 = ( require 'rfdc' ) { proto: true, circles: false, }
 $$                        = ( P... ) -> ( await $ P... ).stdout.trim()
+mkdirp                    = require 'mkdirp'
 
 #-----------------------------------------------------------------------------------------------------------
 resolve = ( P... ) ->
@@ -38,8 +39,8 @@ resolve = ( P... ) ->
 
 #-----------------------------------------------------------------------------------------------------------
 run_tex_etc = ( cfg ) ->
-  cfg.tex_target_path   = resolve cfg.tex_working_path, 'booklet.tex'
-  cfg.tex_pdf_path      = resolve cfg.tex_working_path, 'booklet.pdf'
+  cfg.tex_target_path   = resolve cfg.tempdir, 'booklet.tex'
+  cfg.tex_pdf_path      = resolve cfg.tempdir, 'booklet.pdf'
   FS.writeFileSync cfg.tex_target_path, cfg.imposition
   whisper "wrote imposition to #{cfg.tex_target_path}"
   await _run_tex cfg
@@ -69,10 +70,10 @@ _run_tex = ( cfg ) ->
   paths =
     xelatex: await path_from_executable_name 'xelatex'
   #---------------------------------------------------------------------------------------------------------
-  cd cfg.tex_working_path
+  cd cfg.tempdir
   ### TAINT use loop, check *.aux for changes ###
-  log_path    = PATH.join cfg.tex_working_path, 'xelatex-output'
-  aux_path    = PATH.join cfg.tex_working_path, 'booklet.aux'
+  log_path    = PATH.join cfg.tempdir, 'xelatex-output'
+  aux_path    = PATH.join cfg.tempdir, 'booklet.aux'
   ### TAINT this method has the drawback that we always run at least twice ###
   new_digest  = null
   old_digest  = null
@@ -164,6 +165,25 @@ fetch_pagedistro = ( cfg ) ->
   #.........................................................................................................
   return R
 
+#-----------------------------------------------------------------------------------------------------------
+run_impose = ( cfg ) ->
+  ### TAINT should normalize path ###
+  ### TAINT inconsistent naming ###
+  cfg.bdp_path          = cfg.backdrop
+  # cfg.bdp_path          = resolve cfg.tempdir, 'backdrop.pdf'
+  cfg.mtr_split         = types.data.mtr_split
+  cfg.input             = resolve cfg.input
+  cfg.output            = resolve cfg.output
+  cfg.pagedistro        = await fetch_pagedistro cfg
+  cfg.ovl_path          = resolve cfg.tempdir, 'overlay.pdf'
+  debug '^3553^', { pagedistro: cfg.pagedistro, }
+  show_cfg cfg
+  mtr                   = new Metteur()
+  cfg.imposition        = await mtr._impose cfg
+  # process.exit 111
+  await run_tex_etc cfg
+  return null
+
 
 #===========================================================================================================
 #
@@ -185,6 +205,7 @@ fetch_pagedistro = ( cfg ) ->
                 --overwrite   -y
                 --output      -o
                 --split
+                --tempdir     -t
             """
       #-----------------------------------------------------------------------------------------------------
       'impose':
@@ -192,20 +213,14 @@ fetch_pagedistro = ( cfg ) ->
         runner: ( d ) =>
           cfg             = types.create.mtr_impose_cfg d.verdict.parameters
           # await GUY.temp.with_directory { keep: true, }, ({ path }) ->
-          do ( path = '/tmp/guy.temp--12229-ZUjUOVQEIZXI' ) ->
-            cfg.tex_working_path  = path
-            cfg.mtr_split         = types.data.mtr_split
-            cfg.input             = resolve cfg.input
-            cfg.output            = resolve cfg.output
-            cfg.pagedistro        = await fetch_pagedistro cfg
-            cfg.ovl_path          = resolve cfg.tex_working_path, 'overlay.pdf'
-            debug '^3553^', { pagedistro: cfg.pagedistro, }
-            show_cfg cfg
-            mtr                   = new Metteur()
-            cfg.imposition        = await mtr._impose cfg
-            # process.exit 111
-            await run_tex_etc cfg
-            return null
+          ### TAINT `cfg` key/value duplication ###
+          if cfg.tempdir?
+            mkdirp.sync cfg.tempdir
+            return await run_impose cfg
+          else
+            do ( path = '/tmp/guy.temp--12229-ZUjUOVQEIZXI' ) ->
+              cfg.tempdir = path
+              return await run_impose cfg
           return null
         flags:
           'layout':
@@ -233,6 +248,16 @@ fetch_pagedistro = ( cfg ) ->
             type:         String
             # positional:   true
             description:  "use positive page nr or negative count to control insertion of empty pages"
+          'tempdir':
+            alias:        't'
+            type:         String
+            # positional:   true
+            description:  "use the directory given to run TeX in instead of a temporary directory"
+          'backdrop':
+            alias:        'b'
+            type:         String
+            # positional:   true
+            description:  "use the PDF or image given as a backdrop"
       #-----------------------------------------------------------------------------------------------------
       # 'tex':
       #   description:  "run XeLaTeX on tex/booklet.tex to produce tex/booklet.pdf"
