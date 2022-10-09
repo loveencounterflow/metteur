@@ -157,15 +157,25 @@ class Metteur extends GUY.props.Strict_owner
       dlig: true, }, }
     width     = H.pt_from_mm cfg.page_width
     height    = H.pt_from_mm cfg.page_height
-    pnr = 0
+    quire_nr  = 0
+    poscount  = cfg.layout.pps * cfg.sheetcount
     #.......................................................................................................
-    poscount = cfg.layout.pps * cfg.sheetcount
     for pos_nr in [ 1 .. poscount ]
       page      = doc.addPage [ width, height, ]
+      ### NOTE apparently must write some text, even if blank, otherwise LaTeX will complain ###
+      page.drawText "", { font, x: 0, y: 0, }
       size      = H.pt_from_mm 10
       x         = H.pt_from_mm 10
       y         = H.pt_from_mm 10
-      page.drawText "pos #{pos_nr}", { font, x, y, size, }
+      slot_nr   = ( ( pos_nr - 1 ) %% cfg.layout.pps ) + 1
+      switch slot_nr
+        when 1
+          quire_nr++
+          page.drawText "#{quire_nr}", { font, x, y, size, }
+        when 3
+          page.drawText "*#{quire_nr}", { font, x, y, size, }
+        else
+          null
     #.......................................................................................................
     FS.writeFileSync cfg.ovl_path, await doc.save()
     return null
