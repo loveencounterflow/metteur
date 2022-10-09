@@ -200,9 +200,9 @@ declare.mtr_impose_cfg
     split:        '-0'
     orientation:  'ltr' # or 'rtl' which will invert the orientation of all pages, allowing for CJK, Arabic RTL books
     tempdir:      null
-    # backdrop:     PATH.join __dirname, '../page-elements/blank.png'
+    backdrop:     PATH.join __dirname, '../page-elements/blank.png'
     # backdrop:     PATH.join __dirname, '../page-elements/diagnostic-overlay.png'
-    backdrop:     PATH.join __dirname, '../page-elements/paper1.jpg'
+    # backdrop:     PATH.join __dirname, '../page-elements/paper1.jpg'
     sheet:
       width:      '210mm'
       height:     '297mm'
