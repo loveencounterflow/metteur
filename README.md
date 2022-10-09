@@ -231,6 +231,8 @@ from [*Wikipedia: Bookbinding*](https://en.wikipedia.org/wiki/Bookbinding#Terms_
 * **[–]** support signatures so that several sheets can be bound into a quire (section)
 * **[–]** provide both overlays for signatures, page numbers
 * **[–]** disambiguate the two (?) uses of 'position' in `_impose()`
+* **[–]** add option to skip signature printout on select pages (most importantly on title page)
+* **[–]** add option to configure page numbers in overlay
 
 
 ## Is Done
