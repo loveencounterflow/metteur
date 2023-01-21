@@ -17,6 +17,7 @@
   - [Terminology](#terminology)
   - [Literature](#literature)
   - [Licenses](#licenses)
+  - [Also See](#also-see)
   - [To Do](#to-do)
   - [Is Done](#is-done)
 
@@ -203,6 +204,11 @@ from [*Wikipedia: Bookbinding*](https://en.wikipedia.org/wiki/Bookbinding#Terms_
   work, in accordance with the [Open Font
   License](https://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL)
 
+## Also See
+
+* Metteur is there for putting many PDF pages onto a single sheet, to be folded and bound into a booklet;
+  the inverse of that—putting a single PDF page onto many sheets to be pasted together for one big poster—is
+  what [Plakativ](https://gitlab.mister-muffin.de/josch/plakativ) does.
 
 ## To Do
 
