@@ -70,7 +70,8 @@ class Metteur extends GUY.props.Strict_owner
     #.......................................................................................................
     Q               = new GUY.props.Strict_owner seal: true, target:
       # frame_weight:     '0.25mm'
-      frame_weight:     '0.125mm'
+      # frame_weight:     '0.125mm'
+      frame_weight:     '0.05mm'
       xshift:           Template.misfit
       yshift:           Template.misfit
       column_count:     Template.misfit

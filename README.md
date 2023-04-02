@@ -239,6 +239,8 @@ from [*Wikipedia: Bookbinding*](https://en.wikipedia.org/wiki/Bookbinding#Terms_
 * **[–]** disambiguate the two (?) uses of 'position' in `_impose()`
 * **[–]** add option to skip signature printout on select pages (most importantly on title page)
 * **[–]** add option to configure page numbers in overlay
+* **[–]** scale sheet numbers according to output size
+* **[–]** implement printer's marks to replace frames; scale line widths according to output size
 
 
 ## Is Done
